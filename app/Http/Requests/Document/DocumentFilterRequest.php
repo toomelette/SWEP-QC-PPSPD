@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Menu;
+namespace App\Http\Requests\Document;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class MenuFilterRequest extends FormRequest{
+class DocumentFilterRequest extends FormRequest{
+
 
 
 
@@ -29,5 +30,4 @@ class MenuFilterRequest extends FormRequest{
 
 
 
-    
 }

@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Laravel AdminLTE</title>
+    <title>SRA | Sugar Regulatory Administration</title>
     <link rel="shortcut icon" href="{{ asset('favicon.png') }}">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -17,12 +17,12 @@
         <nav class="navbar navbar-static-top">
           <div class="container">
             <div class="navbar-header">
-              <a href="#" class="navbar-brand"><b>Laravel-AdminLTE Template</b></a>
+              <a href="#" class="navbar-brand"><b>Document Management System</b></a>
             </div>
             <div class="navbar-custom-menu">
               <ul class="nav navbar-nav">
-                <li class="notifications-menu"><a href="#">Login</a></li>
-                <li class="notifications-menu"><a href="#">Info </a></li>
+                <li class="notifications-menu"><a href="/">Documents</a></li>
+                <li class="notifications-menu"><a href="/login">Login</a></li>
               </ul>
             </div>
           </div>

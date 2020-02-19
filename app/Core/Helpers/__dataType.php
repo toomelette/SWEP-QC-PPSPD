@@ -4,7 +4,7 @@ namespace App\Core\Helpers;
 
 use App\Core\Helpers\__static;
 use Carbon\Carbon;
-
+use Str;
 
 class __dataType{
 
@@ -96,6 +96,24 @@ class __dataType{
         }    
 
         return sprintf("%02d", $hrs) .':'. sprintf("%02d", $mins);
+
+    }
+
+
+
+
+
+    public static function fileFilterReservedChar($filename, $extention){
+
+        $filename = str_replace($extention, '', $filename);
+
+        $filename = Str::limit($filename, 150);
+
+        $filename = str_replace(['?', '%', '*', ':', ';', '|', '"', '<', '>', '.', '//', '/'], '', $filename);
+
+        $filename = stripslashes($filename);
+
+        return $filename . $extention;
 
     }
 

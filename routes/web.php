@@ -4,10 +4,19 @@
 /** Auth **/
 Route::group(['as' => 'auth.'], function () {
 	
-	Route::get('/', 'Auth\LoginController@showLoginForm')->name('showLogin');
-	Route::post('/', 'Auth\LoginController@login')->name('login');
+	Route::get('/login', 'Auth\LoginController@showLoginForm')->name('showLogin');
+	Route::post('/login', 'Auth\LoginController@login')->name('login');
 	Route::post('/logout', 'Auth\LoginController@logout')->name('logout');
 	Route::get('/logout', 'Auth\LoginController@logout')->name('logout');
+
+});
+
+
+/** Guest **/
+Route::group(['as' => 'guest.'], function () {
+	
+	Route::get('/', 'DocumentController@indexGuest')->name('document.index');
+	Route::get('/document/view_file/{slug}', 'DocumentController@viewFile')->name('document.view_file');
 
 });
 
@@ -40,6 +49,10 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.', 'middleware' => ['che
 
 	/** MENU **/
 	Route::resource('menu', 'MenuController');
+
+
+	/** Document **/
+	Route::resource('document', 'DocumentController');
 	
 });
 
