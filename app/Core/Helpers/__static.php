@@ -31,4 +31,14 @@ class __static{
     }
 
 
+
+
+    // File Directories
+    public static function archive_dir(){
+
+        return 'F:/swep_qc_ppspd';
+    
+    }
+
+
 }

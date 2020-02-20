@@ -19,7 +19,8 @@ class DocumentFormRequest extends FormRequest{
 
         return [
             
-            'doc_file' => 'nullable|mimes:pdf|max:50000',
+            'doc_file' => 'nullable|array',
+            'folder' => 'nullable|string|max:90',
             
         ];
     

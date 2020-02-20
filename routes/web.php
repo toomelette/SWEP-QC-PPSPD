@@ -1,6 +1,5 @@
 <?php
 
-
 /** Auth **/
 Route::group(['as' => 'auth.'], function () {
 	
@@ -15,12 +14,18 @@ Route::group(['as' => 'auth.'], function () {
 /** Guest **/
 Route::group(['as' => 'guest.'], function () {
 	
-	Route::get('/', 'DocumentController@indexGuest')->name('document.index');
-	Route::get('/document/view_file/{slug}', 'DocumentController@viewFile')->name('document.view_file');
+	Route::get('/import', 'DocumentController@create')->name('document.create');
+	Route::post('/import', 'DocumentController@store')->name('document.store');
+	Route::get('/', 'DocumentController@index')->name('document.index');
+	Route::get('/view_file_guest/{slug}', 'DocumentController@viewFile')->name('document.view_file');
+	Route::get('/{slug}/edit', 'DocumentController@edit')->name('document.edit');
+	Route::put('/{slug}', 'DocumentController@update')->name('document.update');
+	Route::delete('/{slug}', 'DocumentController@destroy')->name('document.destroy');
+	Route::delete('/destroy_hard/{slug}', 'DocumentController@destroyHard')->name('document.destroy_hard');
+	Route::get('/archives', 'DocumentController@archives')->name('document.archives');
+	Route::post('/restore/{slug}', 'DocumentController@restore')->name('document.restore');
 
 });
-
-
 
 
 /** Dashboard **/
@@ -52,8 +57,12 @@ Route::group(['prefix'=>'dashboard', 'as' => 'dashboard.', 'middleware' => ['che
 
 
 	/** Document **/
-	Route::resource('document', 'DocumentController');
+	// Route::get('/document/view_file_guest/{slug}', 'DocumentController@viewFile')->name('document.view_file');
+	// Route::get('/document/archives', 'DocumentController@archives')->name('document.archives');
+	// Route::post('/document/restore/{slug}', 'DocumentController@restore')->name('document.restore');
+	// Route::resource('document', 'DocumentController');
 	
+
 });
 
 

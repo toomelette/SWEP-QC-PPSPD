@@ -1,20 +1,21 @@
 <?php
 
-  $table_sessions = [ Session::get('DOCUMENT_UPDATE_SUCCESS_SLUG'), ];
+	$table_sessions = [];
 
-  $appended_requests = [
-                        'q'=> Request::get('q'),
-                        'sort' => Request::get('sort'),
-                        'direction' => Request::get('direction'),
+	$appended_requests = [
+		                'q'=> Request::get('q'),
+		                'sort' => Request::get('sort'),
+		                'direction' => Request::get('direction'),
 
-                        'df' => Request::get('df'),
-                        'dt' => Request::get('dt'),
-                        'alpha' => Request::get('alpha'),
-                      ];
-   $alphas = array_combine(range('A','Z'),range('A','Z'));
-   $all = ['ALL' => ''];
-   $alphas = array_merge($all, $alphas);
-   
+		                'df' => Request::get('df'),
+		                'dt' => Request::get('dt'),
+		                'alpha' => Request::get('alpha'),
+		              ];
+	              
+	$alphas = array_combine(range('A','Z'),range('A','Z'));
+	$all = ['ALL' => ''];
+	$alphas = array_merge($all, $alphas);
+
 ?>
 
 
@@ -23,14 +24,14 @@
 
 	
 	<section class="content-header">
-		<h1>Search Documents</h1>
+		<h1>Search Archives</h1>
 	</section>
 
 	<section class="content">
 
 
 		{{-- Form Start --}}
-		<form data-pjax class="form" id="filter_form" method="GET" autocomplete="off" action="{{ route('guest.document.index') }}">
+		<form data-pjax class="form" id="filter_form" method="GET" autocomplete="off" action="{{ route('guest.document.archives') }}">
 
 
 			{{-- Advance Filters --}}
@@ -61,7 +62,7 @@
 
 			{{-- Table Search --}}        
 			<div class="box-header with-border">
-				{!! __html::table_search(route('guest.document.index')) !!}
+				{!! __html::table_search(route('guest.document.archives')) !!}
 			</div>
 
 		{{-- Form End --}}  
@@ -79,7 +80,7 @@
             	<th style="width: 150px">Action</th>
 			  </tr>
 			  @foreach($documents as $data) 
-			    <tr {!! __html::table_highlighter($data->slug, $table_sessions) !!}>
+			    <tr>
 			      <td>
 	                @if(Storage::disk('local')->exists($data->file_location))
 	                  <a href="{{ route('guest.document.view_file', $data->slug) }}" class="btn btn-sm btn-success" target="_blank">
@@ -91,15 +92,15 @@
                   </td>
 			      <td id="mid-vert">{{ $data->file_name }}</td>
 			      <td id="mid-vert">{{ __static::archive_dir() .'/'. $data->folder_name }}</td>
-			      <td id="mid-vert">{{ number_format($data->file_size / 1000)}} KB</td>
+			      <td id="mid-vert">{{ number_format($data->file_size / 1000) }} KB</td>
 			      <td id="mid-vert">{{ __dataType::date_parse($data->updated_at, 'M d, Y - g:i A') }}</td>
 	              <td id="mid-vert">
 	                <div class="btn-group">
-	                  <a type="button" class="btn btn-default" id="edit_button" href="{{ route('guest.document.edit', $data->slug) }}">
-	                    <i class="fa fa-pencil"></i>
+	                  <a type="button" class="btn btn-default" id="restore_button" data-action="restore" data-url="{{ route('guest.document.restore', $data->slug) }}">
+	                    <i class="fa fa-refresh"></i>
 	                  </a>
-	                  <a type="button" class="btn btn-default" id="delete_button" data-action="delete" data-url="{{ route('guest.document.destroy', $data->slug) }}">
-	                    <i class="fa fa-trash"></i>
+	                  <a type="button" class="btn btn-danger" id="delete_button" data-action="delete" data-url="{{ route('guest.document.destroy_hard', $data->slug) }}">
+	                    <i class="fa fa-trash-o"></i>
 	                  </a>
 	                </div>
 	              </td>
@@ -123,16 +124,20 @@
 
 	</section>
 
+	<form id="frm-restore" method="POST" style="display: none;">
+		@csrf
+	</form>
+
 @endsection
+
 
 
 
 @section('modals')
 
-  {!! __html::modal_delete('document_delete') !!}
+	{!! __html::modal_delete('document_delete') !!}
 
 @endsection 
-
 
 
 
@@ -144,14 +149,21 @@
     {{-- CALL CONFIRM DELETE MODAL --}}
     {!! __js::button_modal_confirm_delete_caller('document_delete') !!}
 
+  	$(document).on("click", "#restore_button", function () {
+      if($(this).data("action") == "restore"){
+        $("#frm-restore").attr("action", $(this).data("url"));
+        $("#frm-restore").submit();
+      }
+    });
+
+    {{-- RESTORE TOAST --}}
+    @if(Session::has('DOCUMENT_RESTORE_SUCCESS'))
+      {!! __js::toast(Session::get('DOCUMENT_RESTORE_SUCCESS'), 'bottom-right') !!}
+    @endif
+
     {{-- DELETE TOAST --}}
     @if(Session::has('DOCUMENT_DELETE_SUCCESS'))
       {!! __js::toast(Session::get('DOCUMENT_DELETE_SUCCESS'), 'bottom-right') !!}
-    @endif
-
-    {{-- UPDATE TOAST --}}
-    @if(Session::has('DOCUMENT_UPDATE_SUCCESS'))
-      {!! __js::toast(Session::get('DOCUMENT_UPDATE_SUCCESS'), 'bottom-right') !!}
     @endif
 
   </script>

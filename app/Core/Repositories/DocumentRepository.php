@@ -27,20 +27,67 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
-    public function fetchGuest($request){
+    public function fetch($request){
 
         $key = str_slug($request->fullUrl(), '_');
         $entries = isset($request->e) ? $request->e : 100;
 
-        $documents = $this->cache->remember('documents:fetchGuest:' . $key, 240, function() use ($request, $entries){
+        $documents = $this->cache->remember('documents:fetch:' . $key, 240, function() use ($request, $entries){
 
             $document = $this->document->newQuery();
+            $df = $this->__dataType->date_parse($request->df, 'Y-m-d 00:00:00');
+            $dt = $this->__dataType->date_parse($request->dt, 'Y-m-d 24:00:00');
+
+            if(isset($request->q)){
+                $this->search($document, $request->q);
+            }
+
+            if(isset($request->df) || isset($request->dt)){
+                $document->where('updated_at','>=',$df)
+                         ->where('updated_at','<=',$dt);
+            }
+
+            if(isset($request->alpha)){
+                $document->where('file_name', 'LIKE', $request->alpha.'%');
+            }
+
+            return $this->populate($document, $entries);
+
+        });
+
+        return $documents;
+
+    }
+
+
+
+
+
+    public function fetchDeleted($request){
+
+        $key = str_slug($request->fullUrl(), '_');
+        $entries = isset($request->e) ? $request->e : 20;
+
+        $documents = $this->cache->remember('documents:fetchDeleted:' . $key, 240, function() use ($request, $entries){
+
+            $document = $this->document->newQuery();
+            $df = $this->__dataType->date_parse($request->df, 'Y-m-d 00:00:00');
+            $dt = $this->__dataType->date_parse($request->dt, 'Y-m-d 24:00:00');
             
             if(isset($request->q)){
                 $this->search($document, $request->q);
             }
 
-            return $this->populate($document, $entries);
+            if(isset($request->df) || isset($request->dt)){
+                $document->where('updated_at','>=',$df)
+                         ->where('updated_at','<=',$dt);
+            }
+
+            if(isset($request->alpha)){
+                $document->where('file_name', 'LIKE', $request->alpha.'%');
+            }
+
+            return $this->populateDeleted($document, $entries);
 
         });
 
@@ -60,19 +107,105 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         $document->slug = $this->str->random(32);
         $document->document_id = $this->getDocumentIdInc();
         $document->file_name = $request->file('doc_file')->getClientOriginalName();
+        $document->folder_name = $request->folder;
+        $document->file_size = $request->file('doc_file')->getSize();
         $document->file_location = $file_location;
         $document->is_deleted = 0;
         $document->created_at = $this->carbon->now();
         $document->updated_at = $this->carbon->now();
         $document->ip_created = request()->ip();
         $document->ip_updated = request()->ip();
-        $document->user_created = $this->auth->user()->user_id;
-        $document->user_updated = $this->auth->user()->user_id;
         $document->save();
 
         return $document;
 
     }
+
+
+
+
+
+
+
+    public function update($request, $file_name, $file_size, $file_location, $document){
+
+        $document->file_name = $file_name;
+        $document->folder_name = $request->folder;
+        $document->file_size = $file_size;
+        $document->file_location = $file_location;
+        $document->created_at = $this->carbon->now();
+        $document->updated_at = $this->carbon->now();
+        $document->ip_created = request()->ip();
+        $document->ip_updated = request()->ip();
+        $document->save();
+
+        return $document;
+
+    }
+
+
+
+
+
+    public function destroy($slug){
+
+        $document = $this->findBySlug($slug);
+        $document->is_deleted = 1;
+        $document->updated_at = $this->carbon->now();
+        $document->ip_updated = request()->ip();
+        $document->save();
+
+        return $document;
+
+    }
+
+
+
+
+
+    public function destroyHard($document){
+
+        $document->delete();
+        return $document;
+
+    }
+
+
+
+
+
+    public function restore($slug){
+
+        $document = $this->findBySlug($slug);
+        $document->is_deleted = 0;
+        $document->updated_at = $this->carbon->now();
+        $document->ip_updated = request()->ip();
+        $document->save();
+
+        return $document;
+
+    }
+
+
+
+
+
+
+
+    public function findBySlug($slug){
+
+        $document = $this->cache->remember('documents:findBySlug:' . $slug, 240, function() use ($slug){
+            return $this->document->where('slug', $slug)->first();
+        });
+        
+        if(empty($document)){
+            abort(404);
+        }
+        
+        return $document;
+
+    }
+
 
 
 
@@ -93,8 +226,22 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
     public function populate($model, $entries){
 
-        return $model->select('slug', 'file_name', 'file_location', 'updated_at')
+        return $model->select('slug', 'file_name', 'folder_name', 'file_size', 'file_location', 'updated_at')
                      ->where('is_deleted', 0)
+                     ->sortable()
+                     ->orderBy('updated_at', 'desc')
+                     ->paginate($entries);
+
+    }
+
+
+
+
+
+    public function populateDeleted($model, $entries){
+
+        return $model->select('slug', 'file_name', 'folder_name', 'file_size', 'file_location', 'updated_at')
+                     ->where('is_deleted', 1)
                      ->sortable()
                      ->orderBy('updated_at', 'desc')
                      ->paginate($entries);

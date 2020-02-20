@@ -122,6 +122,7 @@ class __html{
 	                  <input name="q" class="form-control pull-right" placeholder="Search any.." type="text" value="'. old("q") .'">
 	                  <div class="input-group-btn">
 	                    <button  id="'. $seach_button_id .'" type="submit" class="btn btn-default btn-md"><i class="fa fa-search"></i></button>
+	                    <a href="'. $refresh_route .'" class="btn btn-default btn-md"><i class="fa fa-refresh"></i></a>
 	                  </div>
 	                </div>
                 </div>

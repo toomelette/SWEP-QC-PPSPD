@@ -21,26 +21,26 @@ class DocumentController extends Controller{
     }
 
 
-    
-    public function indexGuest(DocumentFilterRequest $request){
+
+    public function index(DocumentFilterRequest $request){
         
-        return $this->document->fetchGuest($request);
+        return $this->document->fetch($request);
 
     }
 
 
 
-    // public function index(DocumentFilterRequest $request){
+    public function archives(DocumentFilterRequest $request){
         
-    //     return $this->document->fetch($request);
+        return $this->document->fetchArchives($request);
 
-    // }
+    }
 
     
 
     public function create(){
         
-        return view('dashboard.document.create');
+        return view('guest.document.create');
 
     }
 
@@ -55,29 +55,57 @@ class DocumentController extends Controller{
 
 
 
-    // public function edit($slug){
+    public function edit($slug){
         
-    //     return $this->document->edit($slug);
+        return $this->document->edit($slug);
 
-    // }
+    }
+ 
 
 
 
-
-    // public function update(DocumentFormRequest $request, $slug){
+    public function update(DocumentFormRequest $request, $slug){
         
-    //     return $this->document->update($request, $slug);
+        return $this->document->update($request, $slug);
 
-    // }
+    }
+ 
+
+
+
+    public function viewFile($slug){
+        
+        return $this->document->viewFile($slug);
+
+    }
 
     
 
 
-    // public function destroy($slug){
+    public function destroy($slug){
         
-    //     return $this->document->destroy($slug);
+        return $this->document->destroy($slug);
 
-    // }
+    }
+
+    
+
+
+    public function destroyHard($slug){
+        
+        return $this->document->destroyHard($slug);
+
+    }
+
+    
+
+
+    public function restore($slug){
+        
+        return $this->document->restore($slug);
+
+    }
+
 
 
 

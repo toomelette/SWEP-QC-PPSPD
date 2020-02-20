@@ -10,6 +10,8 @@
     
     @include('layouts.css-plugins')
 
+    @yield('extras')
+
   </head>
   <body class="hold-transition skin-green layout-top-nav">
     <div class="wrapper">
@@ -21,9 +23,15 @@
             </div>
             <div class="navbar-custom-menu">
               <ul class="nav navbar-nav">
-                <li class="notifications-menu"><a href="/">Documents</a></li>
-                <li class="notifications-menu"><a href="/login">Login</a></li>
-              </ul>
+                <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.create') ? 'active' : '' }}">
+                  <a href="{{ route('guest.document.create') }}">Import</a>
+                </li>
+                <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.index') ? 'active' : '' }}">
+                  <a href="{{ route('guest.document.index') }}">Manage</a>
+                </li>
+                <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.archives') ? 'active' : '' }}">
+                  <a href="{{ route('guest.document.archives') }}">Archives</a>
+                </li>
             </div>
           </div>
         </nav>
@@ -46,13 +54,10 @@
     </div>
 
     @include('layouts.js-plugins')
-    
-    <script type="text/javascript">
-      
-      @yield('scripts')
 
-    </script>
-    
+    @yield('modals')
+      
+    @yield('scripts')
 
   </body>
 </html>

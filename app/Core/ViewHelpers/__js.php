@@ -25,7 +25,7 @@ class __js{
 
 
 
-    public static function toast($message){
+    public static function toast($message, $position = "top-right"){
 
        return '$.toast({
 	            text: "'. $message .'",
@@ -33,7 +33,7 @@ class __js{
 	            allowToastClose: true,
 	            hideAfter: 3000,
 	            loader: false,
-	            position: "top-right",
+	            position: "'. $position .'",
 	            bgColor: "#444",
 	            textColor: "white",
 	            textAlign: "left",
