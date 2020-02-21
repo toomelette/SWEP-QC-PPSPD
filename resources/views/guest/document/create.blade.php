@@ -29,11 +29,12 @@
 	     
 	          @csrf
 
-	        {{--   <input id="doc_file" name="doc_file[]" type="file" class="file" multiple data-show-upload="false" data-show-caption="true" data-msg-placeholder="Select {files} for upload..."> --}}
-
-	          {!! __form::file(
-	             '12', 'doc_file[]', 'Upload File *', $errors->has('doc_file'), $errors->first('doc_file'), 'multiple'
-	          ) !!} 
+	          <div class="col-md-12" style="margin-bottom:20px;">
+                  <small class="text-danger">{{ $errors->has('doc_file') ? $errors->first('doc_file') : '' }}</small>
+		          <div class="file-loading">
+					   <input id="doc_file" name="doc_file[]" multiple type="file" class="file" data-browse-on-zone-click="true">
+				  </div>	
+	          </div>
 
               {!! __form::textbox(
                 '6', 'folder', 'text', 'Folder', 'Folder', old('folder'), $errors->has('folder'), $errors->first('folder'), ''
@@ -65,10 +66,15 @@
       {!! __js::toast(Session::get('DOCUMENT_CREATE_SUCCESS'), 'bottom-right') !!}
     @endif
 
+
     $("#doc_file").fileinput({
-        allowedFileExtensions: ["pdf"]
-	 }); 
-    
+        theme: "fa",
+        showUpload: false,
+        showCaption: false,
+	    overwriteInitial: false,
+        browseClass: "btn btn-primary btn-md",
+    }); 
+
 
     var folders = {!! json_encode($folders) !!};
 

@@ -10,7 +10,7 @@ interface DocumentInterface {
 
 	public function fetchDeleted($request);
 
-	public function store($request, $file_location);
+	public function store($request, $data, $file_ext, $file_location);
 
 	public function update($request, $file_name, $file_size, $file_location, $document);
 

@@ -101,14 +101,15 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
-    public function store($request, $file_location){
+    public function store($request, $data, $file_ext, $file_location){
 
         $document = new document;
         $document->slug = $this->str->random(32);
         $document->document_id = $this->getDocumentIdInc();
-        $document->file_name = $request->file('doc_file')->getClientOriginalName();
+        $document->file_name = $data->getClientOriginalName();
+        $document->file_ext = $file_ext;
         $document->folder_name = $request->folder;
-        $document->file_size = $request->file('doc_file')->getSize();
+        $document->file_size = $data->getSize();
         $document->file_location = $file_location;
         $document->is_deleted = 0;
         $document->created_at = $this->carbon->now();

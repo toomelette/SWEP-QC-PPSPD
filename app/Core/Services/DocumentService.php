@@ -55,25 +55,27 @@ class DocumentService extends BaseService{
 
     public function store($request){
 
-        dd($request->file('doc_file'));
+        if (!empty($request->file('doc_file'))) {
 
-        $file_location = "";
-        $filename = trim($request->file('doc_file')->getClientOriginalName(), '.pdf');
+            foreach ($request->file('doc_file') as $data) {
 
-        if(!is_null($request->file('doc_file'))){
+                $file_ext = File::extension($data->getClientOriginalName());
+                $file_name = trim($data->getClientOriginalName(), '.'. $file_ext);
+                $file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
+                $data->storeAs($request->folder, $file_name);
+                $file_location = $request->folder .'/'. $file_name;                
+                    
+                $document = $this->document_repo->store($request, $data, $file_ext, $file_location);
+                
+            } 
 
-            $filename = $this->__dataType::fileFilterReservedChar($filename .'-'. $this->str->random(8), '.pdf');
-            $dir = $request->folder;
-            $request->file('doc_file')->storeAs($dir, $filename);
-            $file_location = $dir .'/'. $filename;
+            $this->event->fire('document.store');
+            return redirect()->back();
 
         }
-            
 
-        $document = $this->document_repo->store($request, $file_location);
-        
-        $this->event->fire('document.store');
         return redirect()->back();
+        
     }
 
 
@@ -100,33 +102,33 @@ class DocumentService extends BaseService{
         $file_name = $document->file_name;
         $file_location = $document->file_location;
         $file_size = $document->file_size;
+        $file_ext = $document->file_ext;
 
         // if doc_file has value
         if(!is_null($request->file('doc_file'))){
 
-            $file_name = trim($request->file('doc_file')->getClientOriginalName(), '.pdf');
-            $new_filename = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.pdf');
-            $dir = $request->folder;
+            $file_ext = File::extension($request->file('doc_file')->getClientOriginalName());
+            $file_name = trim($request->file('doc_file')->getClientOriginalName(), '.'. $file_ext);
+            $new_file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
             $old_file_location = $document->file_location;
-            $new_file_location = $dir .'/'. $new_filename;
+            $new_file_location = $request->folder .'/'. $new_file_name;
             $file_location = $old_file_location;
-            $file_size = $$request->file('doc_file')->getSize();
+            $file_size = $request->file('doc_file')->getSize();
 
             if ($this->storage->disk('local')->exists($old_file_location)) {
                 $this->storage->disk('local')->delete($old_file_location);
             }
             
-            $request->file('doc_file')->storeAs($dir, $new_filename);
+            $request->file('doc_file')->storeAs($request->folder, $new_file_name);
             $file_location = $new_file_location;
 
         }elseif($request->folder != $document->folder_name && $this->storage->disk('local')->exists($file_location)){
 
-            $new_filename = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.pdf');
-            $dir = $request->folder;
-            $new_file_location = $dir .'/'. $new_filename;
-
+            $new_file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
+            $new_file_location = $request->folder .'/'. $new_file_name;
             $this->storage->disk('local')->move($file_location, $new_file_location);
             $file_location = $new_file_location;
+
         }
 
         $document = $this->document_repo->update($request, $file_name, $file_size, $file_location, $document);
@@ -139,6 +141,7 @@ class DocumentService extends BaseService{
 
 
 
+    
 
     public function viewFile($slug){
 

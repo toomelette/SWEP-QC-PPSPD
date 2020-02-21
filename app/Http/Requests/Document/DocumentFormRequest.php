@@ -19,7 +19,7 @@ class DocumentFormRequest extends FormRequest{
 
         return [
             
-            'doc_file' => 'nullable|array',
+            'doc_file' => 'nullable',
             'folder' => 'nullable|string|max:90',
             
         ];
