@@ -57,20 +57,41 @@ class DocumentService extends BaseService{
 
         if (!empty($request->file('doc_file'))) {
 
+            $duplicates_count = 0;
+
             foreach ($request->file('doc_file') as $data) {
 
                 $file_ext = File::extension($data->getClientOriginalName());
                 $file_name = trim($data->getClientOriginalName(), '.'. $file_ext);
                 $file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
                 $data->storeAs($request->folder, $file_name);
-                $file_location = $request->folder .'/'. $file_name;                
-                    
-                $document = $this->document_repo->store($request, $data, $file_ext, $file_location);
-                
-            } 
+                $file_location = $request->folder .'/'. $file_name;  
 
-            $this->event->fire('document.store');
-            return redirect()->back();
+                if($this->document_repo->isFileNameExist($data->getClientOriginalName())){
+
+                    $duplicates_count++;
+
+                    $document = $this->document_repo->store($request, $data, $file_ext, $file_location, 1);
+
+                }else{              
+
+                    $document = $this->document_repo->store($request, $data, $file_ext, $file_location, 0);
+
+                }
+                
+            }
+
+            if ($duplicates_count > 0) {
+
+                $duplicate_document = $this->document_repo->getFirstDuplicate();
+                $duplicates = $this->document_repo->getByFileName($duplicate_document->file_name);
+                $this->event->fire('document.store_has_duplicate', [$duplicate_document, $duplicates]);
+
+            }else{
+
+                $this->event->fire('document.store');
+
+            }
 
         }
 
@@ -95,9 +116,8 @@ class DocumentService extends BaseService{
 
 
 
-
     public function update($request, $slug){
-        
+
         $document = $this->document_repo->findbySlug($slug);
         $file_name = $document->file_name;
         $file_location = $document->file_location;
@@ -121,6 +141,7 @@ class DocumentService extends BaseService{
             
             $request->file('doc_file')->storeAs($request->folder, $new_file_name);
             $file_location = $new_file_location;
+            $file_name = $request->file('doc_file')->getClientOriginalName();
 
         }elseif($request->folder != $document->folder_name && $this->storage->disk('local')->exists($file_location)){
 

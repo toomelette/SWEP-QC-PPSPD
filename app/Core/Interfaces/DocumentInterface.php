@@ -10,11 +10,17 @@ interface DocumentInterface {
 
 	public function fetchDeleted($request);
 
-	public function store($request, $data, $file_ext, $file_location);
+	public function store($request, $data, $file_ext, $file_location, $is_duplicate);
 
 	public function update($request, $file_name, $file_size, $file_location, $document);
 
 	public function findBySlug($slug);
+
+	public function getFirstDuplicate();
+
+	public function getByFileName($filename);
+
+	public function isFileNameExist($filename);
 
 	public function destroy($slug);
 

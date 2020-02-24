@@ -101,7 +101,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
-    public function store($request, $data, $file_ext, $file_location){
+    public function store($request, $data, $file_ext, $file_location, $is_duplicate){
 
         $document = new document;
         $document->slug = $this->str->random(32);
@@ -112,6 +112,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         $document->file_size = $data->getSize();
         $document->file_location = $file_location;
         $document->is_deleted = 0;
+        $document->is_duplicate = $is_duplicate;
         $document->created_at = $this->carbon->now();
         $document->updated_at = $this->carbon->now();
         $document->ip_created = request()->ip();
@@ -213,6 +214,66 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
+    public function getFirstDuplicate(){
+
+        $document = $this->cache->remember('documents:getByIsDuplicate:1', 240, function(){
+            return $this->document->where('is_duplicate', 1)        
+                                  ->orderBy('updated_at', 'desc')
+                                  ->first();
+        });
+        
+        if(empty($document)){
+            abort(404);
+        }
+        
+        return $document;
+
+    }
+
+
+
+
+
+
+
+    public function getByFileName($file_name){
+
+        $document = $this->cache->remember('documents:getByFileName:'.$file_name, 240, function() use ($file_name){
+            return $this->document->where('file_name', $file_name)->get();
+        });
+        
+        return $document;
+
+    }
+
+
+
+
+
+
+
+    public function isFileNameExist($filename){
+
+        $document = $this->cache->remember('documents:findByFileName:' . $filename, 240, function() use ($filename){
+            return $this->document->where('file_name', $filename)
+                                  ->where('is_deleted', 0)
+                                  ->first();
+        });
+        
+        if(empty($document)){
+            return false;
+        }
+        
+        return true;
+
+    }
+
+
+
+
+
+
+
     public function search($model, $key){
 
         return $model->where(function ($model) use ($key) {
@@ -229,6 +290,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
         return $model->select('slug', 'file_name', 'folder_name', 'file_size', 'file_location', 'updated_at')
                      ->where('is_deleted', 0)
+                     ->where('is_duplicate', 0)
                      ->sortable()
                      ->orderBy('updated_at', 'desc')
                      ->paginate($entries);
@@ -243,6 +305,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
         return $model->select('slug', 'file_name', 'folder_name', 'file_size', 'file_location', 'updated_at')
                      ->where('is_deleted', 1)
+                     ->where('is_duplicate', 0)
                      ->sortable()
                      ->orderBy('updated_at', 'desc')
                      ->paginate($entries);

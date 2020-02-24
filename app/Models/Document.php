@@ -29,6 +29,7 @@ class Document extends Model{
         'file_location' => '',
         'file_size' => '',
         'is_deleted' => 0,
+        'is_duplicate' => 0,
         'created_at' => null,
         'updated_at' => null,
         'ip_created' => '',

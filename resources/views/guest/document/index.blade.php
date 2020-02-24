@@ -3,13 +3,10 @@
   $table_sessions = [ Session::get('DOCUMENT_UPDATE_SUCCESS_SLUG'), ];
 
   $appended_requests = [
+                        'e'=> Request::get('e'),
                         'q'=> Request::get('q'),
                         'sort' => Request::get('sort'),
                         'direction' => Request::get('direction'),
-
-                        'df' => Request::get('df'),
-                        'dt' => Request::get('dt'),
-                        'alpha' => Request::get('alpha'),
                       ];
    $alphas = array_combine(range('A','Z'),range('A','Z'));
    $all = ['ALL' => ''];
@@ -75,7 +72,7 @@
 			    <th>@sortablelink('file_name', 'Filename')</th>
 			    <th>@sortablelink('folder_name', 'Location')</th>
 			    <th>@sortablelink('file_size', 'Size')</th>
-			    <th>@sortablelink('updated_at', 'Date Deleted')</th>
+			    <th>@sortablelink('updated_at', 'Date Updated')</th>
             	<th style="width: 150px">Action</th>
 			  </tr>
 			  @foreach($documents as $data) 
@@ -83,7 +80,7 @@
 			      <td>
 	                @if(Storage::disk('local')->exists($data->file_location))
 	                  <a href="{{ route('guest.document.view_file', $data->slug) }}" class="btn btn-sm btn-success" target="_blank">
-	                    <i class="fa fa-file-pdf-o"></i>
+	                    <i class="fa fa-file-text-o"></i>
 	                  </a>
 	                @else
 	                  <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-exclamation-circle"></i></a>

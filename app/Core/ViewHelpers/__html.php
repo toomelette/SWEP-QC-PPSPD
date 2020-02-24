@@ -214,7 +214,7 @@ class __html{
     /** UTILITY METHODS **/
     public static function collapsed_filter(){
 
-       return Input::except('q', 'page', 'sort', 'direction') ? '' : 'collapsed-box';
+       return Input::except('q', 'page', 'sort', 'direction', 'e') ? '' : 'collapsed-box';
 
     }
 

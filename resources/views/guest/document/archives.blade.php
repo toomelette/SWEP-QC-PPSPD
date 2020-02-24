@@ -84,7 +84,7 @@
 			      <td>
 	                @if(Storage::disk('local')->exists($data->file_location))
 	                  <a href="{{ route('guest.document.view_file', $data->slug) }}" class="btn btn-sm btn-success" target="_blank">
-	                    <i class="fa fa-file-pdf-o"></i>
+	                    <i class="fa fa-file-text-o"></i>
 	                  </a>
 	                @else
 	                  <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-exclamation-circle"></i></a>

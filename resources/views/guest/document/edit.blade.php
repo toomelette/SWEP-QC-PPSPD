@@ -39,6 +39,8 @@
 	             '6', 'doc_file', 'Upload File *', $errors->has('doc_file'), $errors->first('doc_file'), ''
 	          ) !!} 
 
+	          <input type="hidden" name="test" value="{{ route('guest.document.view_file', $document->slug) }}">
+
               {!! __form::textbox(
                 '6', 'folder', 'text', 'Folder', 'Folder', old('folder') ? old('folder') : $document->folder_name, $errors->has('folder'), $errors->first('folder'), ''
               ) !!}
@@ -80,17 +82,17 @@
 	        "{{ route('guest.document.view_file', $document->slug) }}",
 	    ],
 	    initialPreviewConfig: [
-	    { 
-	        @if($document->file_ext == "pdf")
-	        	type: "pdf",
-	       	@else
-	       		type: "office", 
-	        @endif
-	        caption: "{{ $document->file_name }}", 
-	        size: "{{ $document->file_size }}", 
-	        width: "100%", 
-	        key: 1 
-	    },
+		    { 
+		        @if($document->file_ext == "pdf")
+		        	type: "pdf",
+		       	@else
+		       		type: "office", 
+		        @endif
+		        caption: "{{ $document->file_name }}", 
+		        size: "{{ $document->file_size }}", 
+		        width: "100%", 
+		        key: 1 
+		    },
 	    ],
 	    initialPreviewAsData: true,
     	preferIconicPreview: true,
