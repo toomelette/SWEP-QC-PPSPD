@@ -106,6 +106,34 @@ class DocumentController extends Controller{
 
     }
 
+    
+
+
+    public function overwriteReplace($slug){
+        
+        return $this->document->overwriteReplace($slug);
+
+    }
+
+    
+
+
+    public function overwriteSkip($slug){
+        
+        return $this->document->overwriteSkip($slug);
+
+    }
+
+    
+
+
+    public function overwriteKeepBoth($slug){
+        
+        return $this->document->overwriteKeepBoth($slug);
+
+    }
+
+
 
 
 

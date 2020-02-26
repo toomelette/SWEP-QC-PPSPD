@@ -65,7 +65,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h4 class="modal-title">Duplicate Filename!</h4>
+          <h4 class="modal-title">Overwrite File?</h4>
         </div>
         <div class="modal-body no-padding">
 
@@ -73,34 +73,86 @@
 			  <tr>
 			    <th>Filename</th>
 			    <th>Size</th>
-			    <th>Last Updated</th>
-            	<th style="width: 150px">Action</th>
+			    <th>Last Modified</th>
 			  </tr>
-			  @if(Session::get('DOCUMENT_CREATE_HAS_DUPLICATE_LIST'))
-				  @foreach(Session::get('DOCUMENT_CREATE_HAS_DUPLICATE_LIST') as $data) 
-				    <tr {!! $data->is_duplicate == 0 ? 'style="background-color: #D5F5E3;"' : 'style="background-color: #F5B7B1;"' !!} >
-				      <td id="mid-vert">
-		                  <a href="{{ route('guest.document.view_file', $data->slug) }}" target="_blank">
-		                    {{ $data->file_name }}
-		                  </a>
-		              </td>
-				      <td id="mid-vert">{{ number_format($data->file_size / 1000)}} KB</td>
-				      <td id="mid-vert">{{ __dataType::date_parse($data->updated_at, 'M d, Y - g:i A') }}</td>
-		              <td id="mid-vert">
-          				<button type="submit" class="btn btn-primary">Replace</button>
-		              </td>
-				    </tr>
-				  @endforeach
+
+			  @if(Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE'))
+			  	<?php 
+			  		$imported_file = Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE');
+			  	?>
+			    <tr {!! $imported_file->is_duplicate == 0 ? 'style="background-color: #D5F5E3;"' : 'style="background-color: #F5B7B1;"' !!} >
+			      <td id="mid-vert">
+	                  <a href="{{ route('guest.document.view_file', $imported_file->slug) }}" target="_blank">
+	                    {{ $imported_file->file_name }}
+	                  </a>
+	              </td>
+			      <td id="mid-vert">{{ number_format($imported_file->file_size / 1000)}} KB</td>
+			      <td id="mid-vert">{{ __dataType::date_parse($imported_file->updated_at, 'M d, Y - g:i A') }}</td>
+			    </tr>
 			  @endif
+
+
+			  @if(Session::get('DOCUMENT_CREATE_HAS_DUPLICATED_FILE'))
+			  	<?php 
+			  		$duplicated_file = Session::get('DOCUMENT_CREATE_HAS_DUPLICATED_FILE');
+			  	?>
+			    <tr {!! $duplicated_file->is_duplicate == 0 ? 'style="background-color: #D5F5E3;"' : 'style="background-color: #F5B7B1;"' !!} >
+			      <td id="mid-vert">
+	                  <a href="{{ route('guest.document.view_file', $duplicated_file->slug) }}" target="_blank">
+	                    {{ $duplicated_file->file_name }}
+	                  </a>
+	              </td>
+			      <td id="mid-vert">{{ number_format($duplicated_file->file_size / 1000)}} KB</td>
+			      <td id="mid-vert">{{ __dataType::date_parse($duplicated_file->updated_at, 'M d, Y - g:i A') }}</td>
+			    </tr>
+			  @endif
+
 			</table>
 
         </div>
         <div class="modal-footer">
-          <button type="submit" class="btn btn-warning">Ignore</button>
+
+          @if(Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE'))
+          	  <?php
+          	  	$imported_file = Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE');
+          	  ?>
+	          <button id ="overwrite_replace"class="btn btn-default" data-url="{{ route('guest.document.overwriteReplace', $imported_file->slug) }}">
+	          	<i class="fa fa-fw fa-check"></i> Replace
+	          </button>
+          @endif
+          @if(Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE'))
+	      	  <?php
+	      	  	$imported_file = Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE');
+	      	  ?>
+	          <button id ="overwrite_skip"class="btn btn-default" data-url="{{ route('guest.document.overwriteSkip', $imported_file->slug) }}">
+	          	<i class="fa fa-fw fa-arrow-right"></i> Skip
+	          </button>
+          @endif
+          @if(Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE'))
+	      	  <?php
+	      	  	$imported_file = Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE');
+	      	  ?>
+	          <button id ="overwrite_keep_both"class="btn btn-default" data-url="{{ route('guest.document.overwriteKeepBoth', $imported_file->slug) }}">
+	          	<i class="fa fa-fw fa-copy"></i> Keep Both
+	          </button>
+          @endif
+
         </div>
       </div>
     </div>
   </div>
+
+  	<form id="frm-overwrite_replace" method="POST" style="display: none;">
+		@csrf
+	</form>
+
+	<form id="frm-overwrite_skip" method="POST" style="display: none;">
+		@csrf
+	</form>
+
+	<form id="frm-overwrite_keep_both" method="POST" style="display: none;">
+		@csrf
+	</form>
 
 @endsection
 
@@ -110,6 +162,20 @@
 
   <script type="text/javascript">
 
+  	$(document).on("click", "#overwrite_replace", function () {
+        $("#frm-overwrite_replace").attr("action", $(this).data("url"));
+        $("#frm-overwrite_replace").submit();
+    });
+
+  	$(document).on("click", "#overwrite_skip", function () {
+        $("#frm-overwrite_skip").attr("action", $(this).data("url"));
+        $("#frm-overwrite_skip").submit();
+    });
+
+  	$(document).on("click", "#overwrite_keep_both", function () {
+        $("#frm-overwrite_keep_both").attr("action", $(this).data("url"));
+        $("#frm-overwrite_keep_both").submit();
+    });
 
     @if(Session::has('DOCUMENT_CREATE_SUCCESS'))
        {!! __js::toast(Session::get('DOCUMENT_CREATE_SUCCESS'), 'bottom-right') !!}

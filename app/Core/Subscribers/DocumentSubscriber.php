@@ -29,6 +29,7 @@ class DocumentSubscriber extends BaseSubscriber{
         $events->listen('document.update', 'App\Core\Subscribers\DocumentSubscriber@onUpdate');
         $events->listen('document.destroy', 'App\Core\Subscribers\DocumentSubscriber@onDestroy');
         $events->listen('document.restore', 'App\Core\Subscribers\DocumentSubscriber@onRestore');
+        $events->listen('document.overwrite', 'App\Core\Subscribers\DocumentSubscriber@onOverwrite');
 
     }
 
@@ -48,14 +49,13 @@ class DocumentSubscriber extends BaseSubscriber{
 
 
 
-    public function onStoreHasDuplicate($duplicate_document, $duplicates){
+    public function onStoreHasDuplicate($imported_file, $duplicated_file){
 
         $this->__cache->deletePattern(''. config('app.name') .'_cache:documents:fetch:*');
-        $this->__cache->deletePattern(''. config('app.name') .'_cache:documents:getByIsDuplicate:1');
 
         $this->session->flash('DOCUMENT_CREATE_HAS_DUPLICATE', 'The System detected duplicate files!');
-        $this->session->flash('DOCUMENT_CREATE_HAS_DUPLICATE_SLUG', $duplicate_document->slug);
-        $this->session->flash('DOCUMENT_CREATE_HAS_DUPLICATE_LIST', $duplicates);
+        $this->session->flash('DOCUMENT_CREATE_HAS_IMPORTED_FILE', $imported_file);
+        $this->session->flash('DOCUMENT_CREATE_HAS_DUPLICATED_FILE', $duplicated_file);
 
     }
 
@@ -102,6 +102,16 @@ class DocumentSubscriber extends BaseSubscriber{
         $this->__cache->deletePattern(''. config('app.name') .'_cache:documents:findBySlug:'. $document->slug .'');
 
         $this->session->flash('DOCUMENT_RESTORE_SUCCESS', 'The Document has been successfully restored!');
+        
+    }
+
+
+
+
+
+    public function onOverwrite($document){
+  
+        $this->__cache->deletePattern(''. config('app.name') .'_cache:documents:findByFileName:'. $document->file_name .'');
         
     }
 

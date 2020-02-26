@@ -10,7 +10,7 @@ interface DocumentInterface {
 
 	public function fetchDeleted($request);
 
-	public function store($request, $data, $file_ext, $file_location, $is_duplicate);
+	public function store($request, $data, $file_ext, $file_location, $is_deleted, $is_duplicate);
 
 	public function update($request, $file_name, $file_size, $file_location, $document);
 
@@ -27,5 +27,9 @@ interface DocumentInterface {
 	public function destroyHard($document);
 
 	public function restore($slug);
+
+	public function overwriteReplace($document);
+
+	public function overwriteKeepBoth($document, $file_name);
 
 }

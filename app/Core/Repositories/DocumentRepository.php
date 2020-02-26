@@ -101,7 +101,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
-    public function store($request, $data, $file_ext, $file_location, $is_duplicate){
+    public function store($request, $data, $file_ext, $file_location, $is_deleted, $is_duplicate){
 
         $document = new document;
         $document->slug = $this->str->random(32);
@@ -111,7 +111,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         $document->folder_name = $request->folder;
         $document->file_size = $data->getSize();
         $document->file_location = $file_location;
-        $document->is_deleted = 0;
+        $document->is_deleted = $is_deleted;
         $document->is_duplicate = $is_duplicate;
         $document->created_at = $this->carbon->now();
         $document->updated_at = $this->carbon->now();
@@ -192,6 +192,37 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
+    public function overwriteReplace($document){
+
+        $document->is_deleted = 0;
+        $document->is_duplicate = 0;
+        $document->updated_at = $this->carbon->now();
+        $document->ip_updated = request()->ip();
+        $document->save();
+
+        return $document;
+
+    }
+
+
+
+
+
+    public function overwriteKeepBoth($document, $file_name){
+
+        $document->is_deleted = 0;
+        $document->is_duplicate = 0;
+        $document->file_name = $file_name;
+        $document->updated_at = $this->carbon->now();
+        $document->ip_updated = request()->ip();
+        $document->save();
+
+        return $document;
+
+    }
+
+
+
 
 
     public function findBySlug($slug){
@@ -212,25 +243,14 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
-
-
     public function getFirstDuplicate(){
 
-        $document = $this->cache->remember('documents:getByIsDuplicate:1', 240, function(){
-            return $this->document->where('is_duplicate', 1)        
-                                  ->orderBy('updated_at', 'desc')
-                                  ->first();
-        });
-        
-        if(empty($document)){
-            abort(404);
-        }
-        
-        return $document;
+        return $this->document->where('is_duplicate', 1)
+                              ->where('is_deleted', 0)        
+                              ->orderBy('updated_at', 'desc')
+                              ->first();
 
     }
-
-
 
 
 
@@ -238,15 +258,14 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
     public function getByFileName($file_name){
 
-        $document = $this->cache->remember('documents:getByFileName:'.$file_name, 240, function() use ($file_name){
-            return $this->document->where('file_name', $file_name)->get();
-        });
-        
-        return $document;
+        return $this->document->where('file_name', $file_name)
+                              ->where('is_deleted', 0)
+                              ->where('is_duplicate', 0)
+                              ->orderBy('updated_at', 'desc')
+                              ->first();
+
 
     }
-
-
 
 
 
@@ -267,8 +286,6 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         return true;
 
     }
-
-
 
 
 
@@ -335,6 +352,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         return $id;
         
     }
+
 
 
 

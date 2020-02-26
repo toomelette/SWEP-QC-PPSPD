@@ -71,11 +71,11 @@ class DocumentService extends BaseService{
 
                     $duplicates_count++;
 
-                    $document = $this->document_repo->store($request, $data, $file_ext, $file_location, 1);
+                    $document = $this->document_repo->store($request, $data, $file_ext, $file_location, 0, 1);
 
                 }else{              
 
-                    $document = $this->document_repo->store($request, $data, $file_ext, $file_location, 0);
+                    $document = $this->document_repo->store($request, $data, $file_ext, $file_location, 0, 0);
 
                 }
                 
@@ -83,9 +83,9 @@ class DocumentService extends BaseService{
 
             if ($duplicates_count > 0) {
 
-                $duplicate_document = $this->document_repo->getFirstDuplicate();
-                $duplicates = $this->document_repo->getByFileName($duplicate_document->file_name);
-                $this->event->fire('document.store_has_duplicate', [$duplicate_document, $duplicates]);
+                $imported_file = $this->document_repo->getFirstDuplicate();
+                $duplicated_file = $this->document_repo->getByFileName($imported_file->file_name);
+                $this->event->fire('document.store_has_duplicate', [$imported_file, $duplicated_file]);
 
             }else{
 
@@ -238,6 +238,101 @@ class DocumentService extends BaseService{
 
         $this->event->fire('document.restore', $document);
         return redirect()->back();
+
+    }
+
+
+
+
+
+
+    public function overwriteReplace($slug){
+
+        $imported_file = $this->document_repo->findbySlug($slug);
+        $duplicated_file = $this->document_repo->getByFileName($imported_file->file_name);
+
+        if(!is_null($duplicated_file->file_location)){
+            if ($this->storage->disk('local')->exists($duplicated_file->file_location)) {
+                $this->storage->disk('local')->delete($duplicated_file->file_location);
+            }
+        }
+
+        $duplicated_file->delete();
+
+        $this->document_repo->overwriteReplace($imported_file);
+        $this->event->fire('document.overwrite_replace', $imported_file);
+
+        $imported_file = $this->document_repo->getFirstDuplicate();
+
+        if (!empty($imported_file)) {
+            $duplicated_file = $this->document_repo->getByFileName($imported_file->file_name);  
+            $this->event->fire('document.store_has_duplicate', [$imported_file, $duplicated_file]); 
+        }else{
+            $this->event->fire('document.store', $imported_file);
+        }
+
+        return redirect()->back();
+
+    }
+
+
+
+
+
+
+    public function overwriteSkip($slug){
+
+        $imported_file = $this->document_repo->findbySlug($slug);
+
+        if(!is_null($imported_file->file_location)){
+            if ($this->storage->disk('local')->exists($imported_file->file_location)) {
+                $this->storage->disk('local')->delete($imported_file->file_location);
+            }
+        }
+
+        $imported_file->delete();
+        $this->event->fire('document.overwrite', $imported_file);
+
+        $imported_file = $this->document_repo->getFirstDuplicate();
+
+        if (!empty($imported_file)) {
+            $duplicated_file = $this->document_repo->getByFileName($imported_file->file_name);  
+            $this->event->fire('document.store_has_duplicate', [$imported_file, $duplicated_file]); 
+        }else{
+            $this->event->fire('document.store', $imported_file);
+        }
+
+        return redirect()->back();
+
+    }
+
+
+
+
+
+
+    public function overwriteKeepBoth($slug){
+
+        $imported_file = $this->document_repo->findbySlug($slug);
+        $duplicated_file = $this->document_repo->getByFileName($imported_file->file_name);
+
+        $file_ext = File::extension($imported_file->file_name);
+        $file_name = trim($imported_file->file_name, '.'. $file_ext);
+        $new_file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->carbon->now()->format('Ymd-His'), '.'. $file_ext);
+
+        $this->document_repo->overwriteKeepBoth($imported_file, $new_file_name);
+        $this->event->fire('document.overwrite', $imported_file);
+
+        $imported_file = $this->document_repo->getFirstDuplicate();
+
+        if (!empty($imported_file)) {
+            $duplicated_file = $this->document_repo->getByFileName($imported_file->file_name);  
+            $this->event->fire('document.store_has_duplicate', [$imported_file, $duplicated_file]); 
+        }else{
+            $this->event->fire('document.store', $imported_file);
+        }
+
+        return redirect()->back();        
 
     }
 

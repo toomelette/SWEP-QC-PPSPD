@@ -24,6 +24,9 @@ Route::group(['as' => 'guest.'], function () {
 	Route::delete('/destroy_hard/{slug}', 'DocumentController@destroyHard')->name('document.destroy_hard');
 	Route::get('/archives', 'DocumentController@archives')->name('document.archives');
 	Route::post('/restore/{slug}', 'DocumentController@restore')->name('document.restore');
+	Route::post('/overwrite/replace/{slug}', 'DocumentController@overwriteReplace')->name('document.overwriteReplace');
+	Route::post('/overwrite/skip/{slug}', 'DocumentController@overwriteSkip')->name('document.overwriteSkip');
+	Route::post('/overwrite/keep_both/{slug}', 'DocumentController@overwriteKeepBoth')->name('document.overwriteKeepBoth');
 
 });
 
