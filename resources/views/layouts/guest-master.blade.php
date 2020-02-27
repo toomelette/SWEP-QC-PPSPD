@@ -21,7 +21,7 @@
             <div class="navbar-header">
               <div class="col-md-12">
                 <div class="col-md-2">
-                  <img src="{{ asset('favicon.png') }}" style="height:45px; width:52px; padding:5px;"> 
+                  <img src="{{ asset('favicon.png') }}" style="height:47px; width:54px; padding:5px;"> 
                 </div>
                 <div class="col-md-10">
                   <a href="#" class="navbar-brand"><b>Document Management System</b></a> 

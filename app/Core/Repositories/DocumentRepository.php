@@ -30,7 +30,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
     public function fetch($request){
 
         $key = str_slug($request->fullUrl(), '_');
-        $entries = isset($request->e) ? $request->e : 100;
+        $entries = isset($request->e) ? $request->e : 20;
 
         $documents = $this->cache->remember('documents:fetch:' . $key, 240, function() use ($request, $entries){
 

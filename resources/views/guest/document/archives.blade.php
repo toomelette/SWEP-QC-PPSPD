@@ -160,7 +160,29 @@
 
 @section('modals')
 
-	{!! __html::modal_delete('document_delete') !!}
+	<div class="modal fade" id="document_delete" data-backdrop="static">
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	        <div class="modal-header">
+	          <button class="close" data-dismiss="modal">
+	            <span aria-hidden="true">&times;</span>
+	          </button>
+	          <h4 class="modal-title"><i class="fa fa-exclamation-circle "></i> Delete ?</h4>
+	        </div>
+	        <div class="modal-body" id="delete_body">
+	          <form method="POST" id="form">
+	            @csrf
+	            <input name="_method" value="DELETE" type="hidden">
+	            <p style="font-size: 17px;">Are you sure, you want to <b>Permanently Delete</b> this record?</p>
+	          </div>
+	          <div class="modal-footer">
+	            <button class="btn btn-default" data-dismiss="modal">Close</button>
+	            <button type="submit" class="btn btn-danger">Delete</button>
+	          </form>
+	        </div>
+	      </div>
+	    </div>
+	</div>
 
 @endsection 
 
