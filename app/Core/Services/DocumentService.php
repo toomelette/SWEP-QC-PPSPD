@@ -64,8 +64,8 @@ class DocumentService extends BaseService{
                 $file_ext = File::extension($data->getClientOriginalName());
                 $file_name = trim($data->getClientOriginalName(), '.'. $file_ext);
                 $file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
-                $data->storeAs($request->folder, $file_name);
-                $file_location = $request->folder .'/'. $file_name;  
+                $data->storeAs('', $file_name);
+                $file_location = $file_name;  
 
                 if($this->document_repo->isFileNameExist($data->getClientOriginalName())){
 
@@ -104,10 +104,10 @@ class DocumentService extends BaseService{
 
 
 
-    public function edit($slug){
+    public function show($slug){
 
         $document = $this->document_repo->findbySlug($slug);
-        return view('guest.document.edit')->with('document', $document);
+        return view('guest.document.show')->with('document', $document);
 
     }
 
@@ -185,6 +185,34 @@ class DocumentService extends BaseService{
         }
 
         return "Cannot Detect File!";;
+        
+
+    }
+
+
+
+
+    
+
+    public function download($slug){
+
+        $document = $this->document_repo->findBySlug($slug);
+
+        if(!empty($document->file_location)){
+            
+            $path = $this->__static->archive_dir() .'/'. $document->file_location;
+
+            if (!File::exists($path)) { return abort(404); }
+
+            $type = File::mimeType($path);
+            $header = array('Content-Type: '. $type .'',);
+            $response = response()->download($path, $document->file_name, $header);
+
+            return $response;
+
+        }
+
+        return abort(404);
         
 
     }

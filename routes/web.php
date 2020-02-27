@@ -17,8 +17,9 @@ Route::group(['as' => 'guest.'], function () {
 	Route::get('/import', 'DocumentController@create')->name('document.create');
 	Route::post('/import', 'DocumentController@store')->name('document.store');
 	Route::get('/', 'DocumentController@index')->name('document.index');
-	Route::get('/view_file_guest/{slug}', 'DocumentController@viewFile')->name('document.view_file');
-	Route::get('/{slug}/edit', 'DocumentController@edit')->name('document.edit');
+	Route::get('/view_file/{slug}', 'DocumentController@viewFile')->name('document.view_file');
+	Route::get('/download/{slug}', 'DocumentController@download')->name('document.download');
+	Route::get('/{slug}/show', 'DocumentController@show')->name('document.show');
 	Route::put('/{slug}', 'DocumentController@update')->name('document.update');
 	Route::delete('/{slug}', 'DocumentController@destroy')->name('document.destroy');
 	Route::delete('/destroy_hard/{slug}', 'DocumentController@destroyHard')->name('document.destroy_hard');

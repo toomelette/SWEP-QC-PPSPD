@@ -1,7 +1,5 @@
 <?php
    $folders =Storage::directories();
-
-       
 ?>
 
 @extends('layouts.guest-master')
@@ -34,13 +32,9 @@
 	          <div class="col-md-12" style="margin-bottom:20px;">
                   <small class="text-danger">{{ $errors->has('doc_file') ? $errors->first('doc_file') : '' }}</small>
 		          <div class="file-loading">
-					   <input id="doc_file" name="doc_file[]" multiple type="file" class="file" data-browse-on-zone-click="true">
+					   <input id="doc_file" name="doc_file[]" type="file" multiple>
 				  </div>	
 	          </div>
-
-              {!! __form::textbox(
-                '6', 'folder', 'text', 'Folder', 'Folder', old('folder'), $errors->has('folder'), $errors->first('folder'), ''
-              ) !!}
 		          
 	        </div>
 
@@ -120,6 +114,7 @@
 	          	<i class="fa fa-fw fa-check"></i> Replace
 	          </button>
           @endif
+
           @if(Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE'))
 	      	  <?php
 	      	  	$imported_file = Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE');
@@ -128,6 +123,7 @@
 	          	<i class="fa fa-fw fa-arrow-right"></i> Skip
 	          </button>
           @endif
+
           @if(Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE'))
 	      	  <?php
 	      	  	$imported_file = Session::get('DOCUMENT_CREATE_HAS_IMPORTED_FILE');
@@ -181,7 +177,6 @@
        {!! __js::toast(Session::get('DOCUMENT_CREATE_SUCCESS'), 'bottom-right') !!}
     @endif
 
-
     @if(Session::has('DOCUMENT_CREATE_HAS_DUPLICATE'))
 	    $( document ).ready(function() {
 	    	$('#document_duplicate').modal('show'); 
@@ -189,21 +184,17 @@
 		});
     @endif
 
-
     $("#doc_file").fileinput({
-        theme: "fa",
         showUpload: false,
         showCaption: false,
-	    overwriteInitial: false,
+        maxFileCount: 100,
         browseClass: "btn btn-primary btn-md",
     }); 
-
 
     var folders = {!! json_encode($folders) !!};
     $('#folder').autocomplete({ 
       source: folders,
     });
-
 
   </script> 
 

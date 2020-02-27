@@ -13,8 +13,42 @@
 		              ];
 	              
 	$alphas = array_combine(range('A','Z'),range('A','Z'));
-	$all = ['ALL' => ''];
+	$all = [
+   			'ALL' => '', 
+       		'0' => '0', 
+       		'1' => '1', 
+       		'2' => '2', 
+       		'3' => '3', 
+       		'4' => '4', 
+       		'5' => '5', 
+       		'6' => '6', 
+       		'7' => '7', 
+       		'8' => '8', 
+       		'9' => '9', 
+       	];
 	$alphas = array_merge($all, $alphas);
+   
+   function design($file_ext){
+
+   		$icon = "";
+
+   		if ($file_ext == 'pdf') {
+   			$icon = "fa-file-pdf-o bg-red";
+   		}elseif($file_ext == 'doc' || $file_ext == 'docx'){
+   			$icon = "fa-file-word-o bg-blue";
+   		}elseif($file_ext == 'ppt' || $file_ext == 'pptx'){
+   			$icon = "fa-file-powerpoint-o bg-orange";
+   		}elseif($file_ext == 'xls' || $file_ext == 'xlsx' || $file_ext == 'csv'){
+   			$icon = "fa-file-excel-o bg-green";
+   		}elseif($file_ext == 'png' || $file_ext == 'jpg' || $file_ext == 'jpeg'){
+   			$icon = "fa-file-image-o bg-blue";
+   		}else{
+   			$icon = "fa-file-text-o";
+   		}
+
+   		return $icon;
+
+   }
 
 ?>
 
@@ -72,26 +106,17 @@
 		<div class="box-body no-padding">
 			<table class="table table-hover">
 			  <tr>
-			    <th>View</th>
 			    <th>@sortablelink('file_name', 'Filename')</th>
-			    <th>@sortablelink('folder_name', 'Location')</th>
 			    <th>@sortablelink('file_size', 'Size')</th>
 			    <th>@sortablelink('updated_at', 'Date Deleted')</th>
             	<th style="width: 150px">Action</th>
 			  </tr>
 			  @foreach($documents as $data) 
 			    <tr>
-			      <td>
-	                @if(Storage::disk('local')->exists($data->file_location))
-	                  <a href="{{ route('guest.document.view_file', $data->slug) }}" class="btn btn-sm btn-success" target="_blank">
-	                    <i class="fa fa-file-text-o"></i>
-	                  </a>
-	                @else
-	                  <a href="#" class="btn btn-sm btn-warning"><i class="fa fa-exclamation-circle"></i></a>
-	                @endif
-                  </td>
-			      <td id="mid-vert">{{ $data->file_name }}</td>
-			      <td id="mid-vert">{{ __static::archive_dir() .'/'. $data->folder_name }}</td>
+                  <?php
+                   	$design = design($data->file_ext);
+                  ?>
+			      <td id="mid-vert"><i class="fa {{ $design }}"></i>&nbsp; {{ $data->file_name }}</td>
 			      <td id="mid-vert">{{ number_format($data->file_size / 1000) }} KB</td>
 			      <td id="mid-vert">{{ __dataType::date_parse($data->updated_at, 'M d, Y - g:i A') }}</td>
 	              <td id="mid-vert">

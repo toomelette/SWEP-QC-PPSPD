@@ -108,7 +108,6 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         $document->document_id = $this->getDocumentIdInc();
         $document->file_name = $data->getClientOriginalName();
         $document->file_ext = $file_ext;
-        $document->folder_name = $request->folder;
         $document->file_size = $data->getSize();
         $document->file_location = $file_location;
         $document->is_deleted = $is_deleted;
@@ -132,7 +131,6 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
     public function update($request, $file_name, $file_size, $file_location, $document){
 
         $document->file_name = $file_name;
-        $document->folder_name = $request->folder;
         $document->file_size = $file_size;
         $document->file_location = $file_location;
         $document->created_at = $this->carbon->now();
@@ -305,7 +303,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
     public function populate($model, $entries){
 
-        return $model->select('slug', 'file_name', 'folder_name', 'file_size', 'file_location', 'updated_at')
+        return $model->select('slug', 'file_name', 'file_size', 'file_location', 'file_ext', 'updated_at')
                      ->where('is_deleted', 0)
                      ->where('is_duplicate', 0)
                      ->sortable()
@@ -320,7 +318,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
     public function populateDeleted($model, $entries){
 
-        return $model->select('slug', 'file_name', 'folder_name', 'file_size', 'file_location', 'updated_at')
+        return $model->select('slug', 'file_name', 'file_size', 'file_location', 'file_ext', 'updated_at')
                      ->where('is_deleted', 1)
                      ->where('is_duplicate', 0)
                      ->sortable()
