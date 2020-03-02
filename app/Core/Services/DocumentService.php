@@ -68,29 +68,20 @@ class DocumentService extends BaseService{
                 $file_location = $file_name;  
 
                 if($this->document_repo->isFileNameExist($data->getClientOriginalName())){
-
                     $duplicates_count++;
-
                     $document = $this->document_repo->store($request, $data, $file_ext, $file_location, 0, 1);
-
                 }else{              
-
                     $document = $this->document_repo->store($request, $data, $file_ext, $file_location, 0, 0);
-
                 }
                 
             }
 
             if ($duplicates_count > 0) {
-
                 $imported_file = $this->document_repo->getFirstDuplicate();
                 $duplicated_file = $this->document_repo->getByFileName($imported_file->file_name);
                 $this->event->fire('document.store_has_duplicate', [$imported_file, $duplicated_file]);
-
             }else{
-
                 $this->event->fire('document.store');
-
             }
 
         }
