@@ -86,6 +86,44 @@ class __dataType{
 
 
 
+    public static function date_scope($from, $to){
+
+      $date_scope = "";
+
+      if (!empty($from) && !empty($to)) {
+          
+        $f = self::date_parse($from, 'F d, Y');
+        $mf = self::date_parse($from, 'F');
+        $df = self::date_parse($from, 'd');
+        $yf = self::date_parse($from, 'Y');
+        $mdf = self::date_parse($from, 'F d');
+        $t = self::date_parse($to, 'F d, Y');
+        $mt = self::date_parse($to, 'F');
+        $dt = self::date_parse($to, 'd');
+        $yt = self::date_parse($to, 'Y');
+        $mdt = self::date_parse($to, 'M d');
+
+        if($mf == $mt && $yf == $yt){
+          if($mdf == $mdt){
+            $date_scope =  $mf .' '. $df .', '. $yf;
+          }else{
+            $date_scope = $mf .' '. $df .' - '. $dt .', '. $yt;
+          }
+        }else{
+          $date_scope = $f .' - '. $t;
+        }
+
+      }
+
+      return $date_scope;
+
+    }
+
+
+
+
+
+
     public static function construct_time_HM($hrs, $mins){
 
         while ($mins >= 60) {

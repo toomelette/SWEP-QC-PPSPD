@@ -17,6 +17,8 @@ Route::group(['as' => 'guest.'], function () {
 	Route::post('/overwrite/replace/{slug}', 'DocumentController@overwriteReplace')->name('document.overwriteReplace');
 	Route::post('/overwrite/skip/{slug}', 'DocumentController@overwriteSkip')->name('document.overwriteSkip');
 	Route::post('/overwrite/keep_both/{slug}', 'DocumentController@overwriteKeepBoth')->name('document.overwriteKeepBoth');
+	Route::get('/reports', 'DocumentController@reports')->name('document.reports');
+	Route::get('/reports_print', 'DocumentController@reportsPrint')->name('document.reports_print');
 
 });
 

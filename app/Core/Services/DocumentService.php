@@ -360,4 +360,17 @@ class DocumentService extends BaseService{
 
 
 
+    public function reportsPrint($request){
+
+        $documents = $this->document_repo->getByDateScope($request);
+
+        return view('guest.document.reports_print')->with('documents', $documents);      
+
+    }
+
+
+
+
+
+
 }

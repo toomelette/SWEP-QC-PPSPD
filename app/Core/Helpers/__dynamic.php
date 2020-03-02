@@ -17,10 +17,11 @@ class __dynamic{
       $start = Carbon::parse($start);
       $end   = Carbon::parse($end);
       $months = [];
+      $start = $start->subMonths(1);
 
       while ($start->addMonth() <= $end){
 
-        $months[$start->format('m-Y')] = $start->format('F Y');
+        $months[$start->format('m')] = $start->format('F Y');
 
       }
 

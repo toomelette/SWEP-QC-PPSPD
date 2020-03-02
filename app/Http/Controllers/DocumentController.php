@@ -142,6 +142,22 @@ class DocumentController extends Controller{
 
     }
 
+    
+
+    public function reports(){
+        
+        return view('guest.document.reports');
+
+    }
+
+    
+
+    public function reportsPrint(DocumentFilterRequest $request){
+        
+        return $this->document->reportsPrint($request);
+
+    }
+
 
 
 

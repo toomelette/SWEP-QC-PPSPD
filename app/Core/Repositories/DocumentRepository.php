@@ -99,6 +99,25 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
+    public function getByDateScope($request){
+
+        $documents = $this->document->newQuery();
+        $df = $this->__dataType->date_parse($request->df, 'Y-m-d 00:00:00');
+        $dt = $this->__dataType->date_parse($request->dt, 'Y-m-d 24:00:00');
+
+        if(isset($request->df) || isset($request->dt)){
+            $documents->where('created_at','>=',$df)
+                     ->where('created_at','<=',$dt);
+        }
+        
+        return $documents->select('created_at')->where('is_deleted', 0)->where('is_duplicate', 0)->get();;
+
+    }
+
+
+
+
+
 
 
     public function store($request, $data, $file_ext, $file_location, $is_deleted, $is_duplicate){

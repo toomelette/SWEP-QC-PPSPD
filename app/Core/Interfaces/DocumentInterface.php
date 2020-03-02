@@ -32,4 +32,6 @@ interface DocumentInterface {
 
 	public function overwriteKeepBoth($document, $file_name);
 
+	public function getByDateScope($request);
+
 }
