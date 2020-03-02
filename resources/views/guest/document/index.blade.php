@@ -8,7 +8,9 @@
                         'sort' => Request::get('sort'),
                         'direction' => Request::get('direction'),
                       ];
+
    $alphas = array_combine(range('A','Z'),range('A','Z'));
+   
    $all = [
    			'ALL' => '', 
        		'0' => '0', 
@@ -22,6 +24,7 @@
        		'8' => '8', 
        		'9' => '9', 
        	];
+
    $alphas = array_merge($all, $alphas);
    
    function design($file_ext){
