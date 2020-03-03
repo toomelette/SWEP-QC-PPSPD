@@ -42,6 +42,9 @@
                 <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.reports') ? 'active' : '' }}">
                   <a href="{{ route('guest.document.reports') }}">Reports</a>
                 </li>
+                <li class="notifications-menu {{ Route::currentRouteNamed('auth.showLogin') ? 'active' : '' }}">
+                  <a href="{{ route('auth.showLogin') }}">Login</a>
+                </li>
             </div>
           </div>
         </nav>

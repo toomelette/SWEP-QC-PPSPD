@@ -30,6 +30,9 @@ class EventServiceProvider extends ServiceProvider{
     protected $subscribe = [
 
         'App\Core\Subscribers\DocumentSubscriber',
+        'App\Core\Subscribers\UserSubscriber',
+        'App\Core\Subscribers\ProfileSubscriber',
+        'App\Core\Subscribers\MenuSubscriber',
         
     ];
 

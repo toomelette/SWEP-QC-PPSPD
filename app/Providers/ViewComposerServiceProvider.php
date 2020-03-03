@@ -11,6 +11,18 @@ class ViewComposerServiceProvider extends ServiceProvider{
     
     public function boot(){
 
+    	View::composer('layouts.admin-sidenav', 'App\Core\ViewComposers\UserMenuComposer');
+
+
+        // MENU
+        View::composer(['dashboard.user.create', 
+                        'dashboard.user.edit'], 'App\Core\ViewComposers\MenuComposer');
+        
+
+        // SUBMENU
+        View::composer(['dashboard.user.create', 
+                        'dashboard.user.edit'], 'App\Core\ViewComposers\SubmenuComposer');
+
     }
 
     
