@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 
 use App\Core\Services\HomeService;
+use App\Http\Requests\Home\DocumentDownloadFilterRequest;
 
 
 
@@ -27,9 +28,9 @@ class HomeController extends Controller{
 
 
 
-    public function index(){
+    public function index(DocumentDownloadFilterRequest $request){
 
-    	return $this->home->view();
+    	return $this->home->view($request);
 
     }
     

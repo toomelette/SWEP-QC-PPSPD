@@ -30,6 +30,7 @@ class DocumentSubscriber extends BaseSubscriber{
         $events->listen('document.destroy', 'App\Core\Subscribers\DocumentSubscriber@onDestroy');
         $events->listen('document.restore', 'App\Core\Subscribers\DocumentSubscriber@onRestore');
         $events->listen('document.overwrite', 'App\Core\Subscribers\DocumentSubscriber@onOverwrite');
+        $events->listen('document.download', 'App\Core\Subscribers\DocumentSubscriber@onDownload');
 
     }
 
@@ -112,6 +113,16 @@ class DocumentSubscriber extends BaseSubscriber{
     public function onOverwrite($document){
   
         $this->__cache->deletePattern(''. config('app.name') .'_cache:documents:findByFileName:'. $document->file_name .'');
+        
+    }
+
+
+
+
+
+    public function onDownload(){
+  
+        $this->__cache->deletePattern(''. config('app.name') .'_cache:document_downloads:fetch:*');
         
     }
 

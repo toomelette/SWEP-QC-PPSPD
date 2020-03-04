@@ -24,7 +24,7 @@
                   <img src="{{ asset('favicon.png') }}" style="height:47px; width:54px; padding:5px;"> 
                 </div>
                 <div class="col-md-10">
-                  <a href="#" class="navbar-brand"><b>Document Management System</b></a> 
+                  <a href="{{ route('guest.document.index') }}" class="navbar-brand"><b>Document Management System</b></a> 
                 </div>
               </div>
             </div>
@@ -34,7 +34,7 @@
                   <a href="{{ route('guest.document.create') }}">Import</a>
                 </li>
                 <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.index') ? 'active' : '' }}">
-                  <a href="{{ route('guest.document.index') }}">Manage</a>
+                  <a href="{{ route('guest.document.index') }}">Documents</a>
                 </li>
                 <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.archives') ? 'active' : '' }}">
                   <a href="{{ route('guest.document.archives') }}">Archives</a>

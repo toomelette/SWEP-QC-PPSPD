@@ -3,39 +3,32 @@
 namespace App\Core\Services;
 
 
-use App\Core\Interfaces\UserInterface;
+use App\Core\Interfaces\DocumentDownloadInterface;
 use App\Core\BaseClasses\BaseService;
-
 
 
 class HomeService extends BaseService{
 
-
-
-    protected $user_repo;
+    protected $document_download_repo;
 
 
 
-    public function __construct(UserInterface $user_repo){
+    public function __construct(DocumentDownloadInterface $document_download_repo){
 
-        $this->user_repo = $user_repo;
+        $this->document_download_repo = $document_download_repo;
         parent::__construct();
 
     }
 
 
 
+    public function view($request){
 
-
-    public function view(){
-
-        return view('dashboard.home.index');
+        $document_downloads = $this->document_download_repo->fetch($request);
+        $request->flash();
+        return view('dashboard.home.index')->with('document_downloads', $document_downloads);
 
     }
-
-
-
-
 
 
 

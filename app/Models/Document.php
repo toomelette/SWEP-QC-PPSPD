@@ -41,6 +41,13 @@ class Document extends Model{
 
 
 
+    // RELATIONSHIPS
+    public function documentDownload() {
+        return $this->hasMany('App\Models\DocumentDownload','document_id','document_id');
+    }
+
+
+
 
     
 }

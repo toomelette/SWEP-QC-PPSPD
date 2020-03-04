@@ -48,15 +48,15 @@
           </thead>
           <tbody>
 
-            @foreach(__dynamic::months_between_dates(Request::get('df'), Request::get('dt')) as $key => $data)
+            @foreach(__dynamic::months_between_dates(Request::get('df'), Request::get('dt')) as $data_month)
               <tr>
-                <td>{{ $data }}</td>
+                <td>{{ $data_month }}</td>
                 <td>
 
                   <?php $count = 0; ?>
 
-                  @foreach($documents as $data)
-                    @if(__dataType::date_parse($data->created_at, 'm') == $key)
+                  @foreach($documents as $data_doc)
+                    @if(__dataType::date_parse($data_doc->created_at, 'F Y') == $data_month)
                       <?php $count+=1; ?>
                     @endif
                   @endforeach

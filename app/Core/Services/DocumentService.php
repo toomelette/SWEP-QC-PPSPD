@@ -4,6 +4,7 @@ namespace App\Core\Services;
 
 
 use App\Core\Interfaces\DocumentInterface;
+use App\Core\Interfaces\DocumentDownloadInterface;
 use App\Core\BaseClasses\BaseService;
 use File;
 
@@ -12,12 +13,14 @@ class DocumentService extends BaseService{
 
 
     protected $document_repo;
+    protected $document_download_repo;
 
 
 
-    public function __construct(DocumentInterface $document_repo){
+    public function __construct(DocumentInterface $document_repo, DocumentDownloadInterface $document_download_repo){
 
         $this->document_repo = $document_repo;
+        $this->document_download_repo = $document_download_repo;
         parent::__construct();
 
     }
@@ -195,17 +198,21 @@ class DocumentService extends BaseService{
 
             if (!File::exists($path)) { return abort(404); }
 
+            $document_download = $this->document_download_repo->store($document->document_id);
+
             $type = File::mimeType($path);
-            $header = array('Content-Type: '. $type .'',);
+            $header = [
+                        'Cache-Control' => 'no-store, no-cache, must-revalidate, post-check=0, pre-check=0',
+                    ];
             $response = response()->download($path, $document->file_name, $header);
 
+            $this->event->fire('document.download');
             return $response;
 
         }
 
         return abort(404);
         
-
     }
 
 

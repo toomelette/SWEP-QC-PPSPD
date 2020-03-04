@@ -25,6 +25,8 @@ class RepositoryServiceProvider extends ServiceProvider {
 		$this->app->bind('App\Core\Interfaces\ProfileInterface', 'App\Core\Repositories\ProfileRepository');
 
 		$this->app->bind('App\Core\Interfaces\DocumentInterface', 'App\Core\Repositories\DocumentRepository');
+
+		$this->app->bind('App\Core\Interfaces\DocumentDownloadInterface', 'App\Core\Repositories\DocumentDownloadRepository');
 		
 	}
 
