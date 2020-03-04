@@ -146,7 +146,7 @@ class DocumentController extends Controller{
 
     public function reports(){
         
-        return view('guest.document.reports');
+        return $this->document->reports();
 
     }
 

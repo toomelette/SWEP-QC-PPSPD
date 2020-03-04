@@ -34,4 +34,6 @@ interface DocumentInterface {
 
 	public function getByDateScope($request);
 
+	public function getAll();
+
 }

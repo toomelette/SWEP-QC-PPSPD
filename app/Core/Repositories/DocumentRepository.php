@@ -374,5 +374,18 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
+    public function getAll(){
+        
+        return $this->document->select('created_at')
+                              ->where('is_deleted', 0)
+                              ->where('is_duplicate', 0)
+                              ->get();
+
+    }
+
+
+
+
+
 
 }

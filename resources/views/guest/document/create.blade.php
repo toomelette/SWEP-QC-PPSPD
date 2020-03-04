@@ -18,9 +18,6 @@
 	    
 	      <div class="box-header with-border">
 	        <h3 class="box-title">Import Document</h3>
-	        <div class="pull-right">
-	            <code>Fields with asterisks(*) are required</code>
-	        </div> 
 	      </div>
 	      
 	      <form role="form" method="POST" autocomplete="off" action="{{ route('guest.document.store') }}" enctype="multipart/form-data">

@@ -1,3 +1,9 @@
+<?php
+
+   $years = ['2020'];
+   $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
+?>
 <!DOCTYPE html>
 <html>
 
@@ -17,8 +23,8 @@
       <div class="row" style="padding:10px;">
         <div class="col-xs-1"></div>
         <div class="col-xs-12">
-            <div class="col-xs-1"></div>
-            <div class="col-xs-3">
+            <div class="col-xs-2"></div>
+            <div class="col-xs-2">
               <img src="{{ asset('favicon.png') }}" style="width:200px;">
             </div>
             <div class="col-xs-7" style="text-align: center; padding-right:125px;">
@@ -27,7 +33,6 @@
               <span>North Avenue, Diliman, Quezon City</span><br>
               <span>Document Management System</span><br>
               <span>Number of Imports by Month</span><br>
-              <span>as of {{ __dataType::date_scope(Request::get('df'), Request::get('dt')) }}</span>
             </div>
             <div class="col-xs-1"></div>
         </div>
@@ -35,44 +40,74 @@
       </div>
     </div>
 
-
-
     <div class="row" style="padding-top:20px;">
       <div class="col-xs-12 table-responsive">
-        <table class="table table-striped">
-          <thead>
-          <tr>
-            <th>Month</th>
-            <th>Imports</th>
-          </tr>
-          </thead>
-          <tbody>
+        <table class="table table-bordered">
 
-            @foreach(__dynamic::months_between_dates(Request::get('df'), Request::get('dt')) as $data_month)
-              <tr>
-                <td>{{ $data_month }}</td>
-                <td>
+              <thead>
 
-                  <?php $count = 0; ?>
+                <tr>
+                  <th>Year</th>
+                  <th>Jan</th>
+                  <th>Feb</th>
+                  <th>Mar</th>
+                  <th>Apr</th>
+                  <th>May</th>
+                  <th>Jun</th>
+                  <th>Jul</th>
+                  <th>Aug</th>
+                  <th>Sep</th>
+                  <th>Oct</th>
+                  <th>Nov</th>
+                  <th>Dec</th>
+                  <th>Total</th>
+                </tr>
+              </thead>
 
-                  @foreach($documents as $data_doc)
-                    @if(__dataType::date_parse($data_doc->created_at, 'F Y') == $data_month)
-                      <?php $count+=1; ?>
-                    @endif
-                  @endforeach
+              <tbody>
 
-                  {{ $count }}
+                @foreach ($years as $data_year)
 
-                </td>
-              </tr>
-            @endforeach 
+                  <tr>
 
-            <tr>
-                <td><b>TOTAL</b></td>
-                <td><b>{{ $documents->count() }}</b></td>
-              </tr>
-          </tbody>
-        </table>
+                    <?php $count_total = 0; ?>
+
+                    <td>{{ $data_year }}</td>
+
+                    @foreach ($months as $data_month)
+                    
+                      <?php $count = 0; ?>
+
+                      @foreach ($documents as $data_doc)
+
+                        <?php
+                          $year_created = __dataType::date_parse($data_doc->created_at, 'Y');
+                          $month_created = __dataType::date_parse($data_doc->created_at, 'm');
+                        ?>
+
+                        @if ($year_created == $data_year && $month_created == $data_month)
+                          
+                          <?php $count++; ?>
+
+                        @endif
+                        
+                      @endforeach
+
+                      <td>{{ $count }}</td>
+
+                      <?php $count_total += $count ?>
+
+                    @endforeach
+
+                    <td><b>{{ $count_total }}</b></td>  
+
+                  </tr> 
+
+                @endforeach
+
+              </tbody>
+
+          </table>
       </div>
 
     </div>
