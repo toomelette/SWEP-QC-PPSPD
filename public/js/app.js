@@ -28,9 +28,11 @@ $('select[multiple]').select2({
 $(document).ready(function($){
    $("#filter_form").submit(function() {
         $(this).find(":input").filter(function(){ return !this.value; }).attr("disabled", "disabled");
+         $(this).find(":select").filter(function(){ return !this.value; }).attr("disabled", "disabled");
         return true;
     });
     $("form").find( ":input" ).prop( "disabled", false );
+    $("form").find( ":select" ).prop( "disabled", false );
 });
 
 

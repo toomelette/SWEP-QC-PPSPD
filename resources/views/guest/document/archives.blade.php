@@ -68,30 +68,6 @@
 		<form data-pjax class="form" id="filter_form" method="GET" autocomplete="off" action="{{ route('guest.document.archives') }}">
 
 
-			{{-- Advance Filters --}}
-		    {!! __html::filter_open() !!}
-
-			    {!! __form::select_static_for_filter(
-			      '2', 'alpha', 'Alphabetical', old('pi'), $alphas, 'submit_document_filter', '', ''
-			    ) !!}
-
-
-		      	<div class="col-md-12 no-padding">
-		        
-			        <h5>Date Filter : </h5>
-			        {!! __form::datepicker('3', 'df',  'From', old('df'), '', '') !!}
-
-			        {!! __form::datepicker('3', 'dt',  'To', old('dt'), '', '') !!}
-
-			        <button type="submit" class="btn btn-primary" style="margin:25px;">
-			        	Filter Date <i class="fa fa-fw fa-arrow-circle-right"></i>
-			        </button>
-
-		      	</div>
-
-		    {!! __html::filter_close('submit_document_filter') !!}
-
-
 			<div class="box box-solid" id="pjax-container" style="overflow-x:auto;">
 
 			{{-- Table Search --}}        
@@ -196,7 +172,7 @@
     {{-- CALL CONFIRM DELETE MODAL --}}
     {!! __js::button_modal_confirm_delete_caller('document_delete') !!}
 
-  	$(document).on("click", "#restore_button", function () {
+    $(document).on("click", "#restore_button", function () {
       if($(this).data("action") == "restore"){
         $("#frm-restore").attr("action", $(this).data("url"));
         $("#frm-restore").submit();

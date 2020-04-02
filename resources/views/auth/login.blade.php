@@ -2,8 +2,8 @@
 @section('content')
 
 <section class="content">
-	<div class="col-md-3"></div>
-	<div class="col-md-6">
+	<div class="col-md-4"></div>
+	<div class="col-md-4">
 
 		@if(Session::has('AUTH_AUTHENTICATED'))
 			{!! __html::alert('danger', '<i class="icon fa fa-ban"></i> Oops!', Session::get('AUTH_AUTHENTICATED')) !!}
@@ -74,6 +74,6 @@
 		</div>
 
 	</div>
-	<div class="col-md-3"></div>
+	<div class="col-md-4"></div>
 </section>
 @endsection

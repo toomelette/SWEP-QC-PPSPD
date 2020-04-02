@@ -13,11 +13,11 @@
     @yield('extras')
 
   </head>
-  <body class="hold-transition skin-green layout-top-nav" style="zoom:90%;">
+  <body class="hold-transition skin-green layout-top-nav">
     <div class="wrapper">
       <header class="main-header">
         <nav class="navbar navbar-static-top">
-          <div class="container">
+          <div class="container-fluid">
             <div class="navbar-header">
               <div class="col-md-12">
                 <div class="col-md-2">
@@ -49,13 +49,13 @@
           </div>
         </nav>
       </header>
-      <div class="content-wrapper" style="height:500em;">
-        <div class="container">
+      <div class="content-wrapper">
+        <div class="container-fluid">
           @yield('content')
         </div>
       </div>
       <footer class="main-footer">
-        <div class="container">
+        <div class="container-fluid">
           <div class="pull-right hidden-xs">
             <b>Version</b> 1.1
           </div>

@@ -3,10 +3,14 @@
   $table_sessions = [ Session::get('DOCUMENT_UPDATE_SUCCESS_SLUG'), ];
 
   $appended_requests = [
-                        'e'=> Request::get('e'),
                         'q'=> Request::get('q'),
                         'sort' => Request::get('sort'),
                         'direction' => Request::get('direction'),
+
+		                'df' => Request::get('df'),
+		                'dt' => Request::get('dt'),
+		                'alpha' => Request::get('alpha'),
+		                'file_ext' => Request::get('file_ext'),
                       ];
 
    $alphas = array_combine(range('A','Z'),range('A','Z'));
@@ -49,104 +53,119 @@
 
    }
 
+   $filetypes = [
+   	'pdf' => 'PDF',
+   	'word' => 'Word', 
+   	'excel' => 'Excel', 
+   	'ppt' => 'PowerPoint', 
+   	'pub' => 'Publisher', 
+   	'img' => 'Image',
+	];
+
 ?>
 
 
 @extends('layouts.guest-master')
+
 @section('content')
 
-	
-	<section class="content-header">
-		<h1>Search Documents</h1>
-	</section>
+<section class="content">
 
-	<section class="content">
+<form data-pjax class="form" id="filter_form" method="GET" autocomplete="off" action="{{ route('guest.document.index') }}">
 
+    <div class="col-md-3">
 
-		{{-- Form Start --}}
-		<form data-pjax class="form" id="filter_form" method="GET" autocomplete="off" action="{{ route('guest.document.index') }}">
-
-
-			{{-- Advance Filters --}}
-		    {!! __html::filter_open() !!}
+	    <div class="box box-solid">
+	      <div class="box-header with-border">
+	        <h2 class="box-title">Filters</h2>
+	      </div>
+			<div class="box-body">
 
 			    {!! __form::select_static_for_filter(
-			      '2', 'alpha', 'Alphabetical', old('pi'), $alphas, 'submit_document_filter', '', ''
+			      '12', 'alpha', 'Alphabetical', old('pi'), $alphas, 'submit_document_filter', '', ''
 			    ) !!}
 
+	            <div class="checkbox col-md-12">
+	              <span>Filetypes:</span><br>
+	              @foreach($filetypes as $key => $data)
+		              <label>
+		                <input type="checkbox" class="minimal file_ext" name="file_ext" value="{{ $key }}">
+		                	&nbsp; {{ $data }}
+		              </label><br>
+	              @endforeach
+	            </div>
 
-		      	<div class="col-md-12 no-padding">
-		        
-			        <h5>Date Filter : </h5>
-			        {!! __form::datepicker('3', 'df',  'From', old('df'), '', '') !!}
+	      	</div>
+	    </div>	
 
-			        {!! __form::datepicker('3', 'dt',  'To', old('dt'), '', '') !!}
+	    <div class="box box-solid">
+	      <div class="box-header with-border">
+	        <h2 class="box-title">Date Filters</h2>
+	      </div>
+			<div class="box-body">
+		        {!! __form::datepicker('12', 'df',  'From', old('df'), '', '') !!}
+		        {!! __form::datepicker('12', 'dt',  'To', old('dt'), '', '') !!}
+		        <button type="submit" class="btn btn-primary">
+		        	Filter Date <i class="fa fa-fw fa-arrow-circle-right"></i>
+		        </button>
+	      		<button type="submit" id="submit_document_filter" style="display:none;">Filter</button>
+	      	</div>
+	    </div>
 
-			        <button type="submit" class="btn btn-primary" style="margin:25px;">
-			        	Filter Date <i class="fa fa-fw fa-arrow-circle-right"></i>
-			        </button>
-
-		      	</div>
-
-		    {!! __html::filter_close('submit_document_filter') !!}
+    </div>
 
 
-			<div class="box box-solid" id="pjax-container" style="overflow-x:auto;">
-
-			{{-- Table Search --}}        
+    <div class="col-md-9">
+		<div class="box box-solid" id="pjax-container" style="overflow-x:auto;">
 			<div class="box-header with-border">
 				{!! __html::table_search(route('guest.document.index')) !!}
 			</div>
+</form>
 
-		{{-- Form End --}}  
-		</form>
-
-		{{-- Table Grid --}}        
-		<div class="box-body no-padding">
-			<table class="table table-hover">
-			  <tr>
-			    <th>@sortablelink('file_name', 'Filename')</th>
-			    <th>@sortablelink('file_size', 'Size')</th>
-			    <th>@sortablelink('updated_at', 'Date Updated')</th>
-            	<th style="width: 150px">Action</th>
-			  </tr>
-			  @foreach($documents as $data) 
-			    <tr {!! __html::table_highlighter($data->slug, $table_sessions) !!}>
-                  <?php
-                   	$design = design($data->file_ext);
-                  ?>
-			      <td id="mid-vert"><i class="fa {{ $design }}"></i>&nbsp; {{ $data->file_name }}</td>
-			      <td id="mid-vert">{{ number_format($data->file_size / 1000)}} KB</td>
-			      <td id="mid-vert">{{ __dataType::date_parse($data->updated_at, 'M d, Y - g:i A') }}</td>
-	              <td id="mid-vert">
-	                <div class="btn-group">
-	                  <a type="button" class="btn btn-default" id="show_button" href="{{ route('guest.document.show', $data->slug) }}">
-	                    <i class="fa fa-info-circle"></i>
-	                  </a>
-	                  <a type="button" class="btn btn-default" id="delete_button" data-action="delete" data-url="{{ route('guest.document.destroy', $data->slug) }}">
-	                    <i class="fa fa-trash"></i>
-	                  </a>
-	                </div>
-	              </td>
-			    </tr>
-			  @endforeach
-			 </table>
+			{{-- Table Grid --}}        
+			<div class="box-body no-padding">
+				<table class="table table-hover">
+				  <tr>
+				    <th>@sortablelink('file_name', 'Filename')</th>
+				    <th>@sortablelink('file_size', 'Size')</th>
+				    <th>@sortablelink('updated_at', 'Date Updated')</th>
+	            	<th style="width: 150px">Action</th>
+				  </tr>
+				  @foreach($documents as $data) 
+				    <tr {!! __html::table_highlighter($data->slug, $table_sessions) !!}>
+	                  <?php
+	                   	$design = design($data->file_ext);
+	                  ?>
+				      <td id="mid-vert"><i class="fa {{ $design }}"></i>&nbsp; {{ $data->file_name }}</td>
+				      <td id="mid-vert">{{ number_format($data->file_size / 1000)}} KB</td>
+				      <td id="mid-vert">{{ __dataType::date_parse($data->updated_at, 'M d, Y - g:i A') }}</td>
+		              <td id="mid-vert">
+		                <div class="btn-group">
+		                  <a type="button" class="btn btn-default" id="show_button" href="{{ route('guest.document.show', $data->slug) }}">
+		                    <i class="fa fa-download"></i>
+		                  </a>
+		                  <a type="button" class="btn btn-default" id="delete_button" data-action="delete" data-url="{{ route('guest.document.destroy', $data->slug) }}">
+		                    <i class="fa fa-trash"></i>
+		                  </a>
+		                </div>
+		              </td>
+				    </tr>
+				  @endforeach
+				 </table>
+			</div>
+			@if($documents->isEmpty())
+				<div style="padding :5px;">
+				  <center><h4>No Records found!</h4></center>
+				</div>
+			@endif
+			<div class="box-footer">
+				{!! __html::table_counter($documents) !!}
+				{!! $documents->appends($appended_requests)->render('vendor.pagination.bootstrap-4')!!}
+			</div>
 		</div>
+    </div>
 
-		@if($documents->isEmpty())
-		<div style="padding :5px;">
-		  <center><h4>No Records found!</h4></center>
-		</div>
-		@endif
-
-		<div class="box-footer">
-		{!! __html::table_counter($documents) !!}
-		{!! $documents->appends($appended_requests)->render('vendor.pagination.bootstrap-4')!!}
-		</div>
-
-		</div>
-
-	</section>
+</section>
 
 @endsection
 
@@ -168,6 +187,15 @@
 
     {{-- CALL CONFIRM DELETE MODAL --}}
     {!! __js::button_modal_confirm_delete_caller('document_delete') !!}
+
+    $('.file_ext').on('ifChecked', function(event){
+      $('input[type="checkbox"]').not(this).iCheck('uncheck');
+      $('#submit_document_filter').click();
+    });
+
+    $('.file_ext').on('ifUnchecked', function(event){
+      $('#submit_document_filter').click();
+    });
 
     {{-- DELETE TOAST --}}
     @if(Session::has('DOCUMENT_DELETE_SUCCESS'))
