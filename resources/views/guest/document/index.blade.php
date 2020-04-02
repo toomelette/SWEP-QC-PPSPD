@@ -89,7 +89,7 @@
 	              <span>Filetypes:</span><br>
 	              @foreach($filetypes as $key => $data)
 		              <label>
-		                <input type="checkbox" class="minimal file_ext" name="file_ext" value="{{ $key }}">
+		                <input type="checkbox" class="minimal file_ext" name="file_ext" value="{{ $key }}" {{ old('file_ext') == $key ? 'checked' : '' }}>
 		                	&nbsp; {{ $data }}
 		              </label><br>
 	              @endforeach

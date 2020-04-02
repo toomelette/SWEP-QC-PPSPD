@@ -38,17 +38,38 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
             $df = $this->__dataType->date_parse($request->df, 'Y-m-d 00:00:00');
             $dt = $this->__dataType->date_parse($request->dt, 'Y-m-d 24:00:00');
 
+            $WORD = ['doc', 'docm', 'docx', 'dot', 'dotm', 'dotx'];
+            $EXCEL = ['xls', 'xlsx', 'xlsm', 'xlt', 'xltx', 'xltm', 'xla', 'xlam', 'csv'];
+            $PPT = ['ppt', 'pptm', 'pptx', 'pps', 'ppsm', 'ppsx', 'pot', 'potm', 'potx'];
+            $IMG = ['jpeg', 'jpg', 'png', 'ai', 'psd', '', ''];
+
             if(isset($request->q)){
                 $this->search($document, $request->q);
+            }
+
+            if(isset($request->alpha)){
+                $document->where('file_name', 'LIKE', $request->alpha.'%');
+            }
+
+            if (isset($request->file_ext)) {
+                if ($request->file_ext == 'pdf') {
+                    $document->where('file_ext', 'pdf');   
+                }elseif ($request->file_ext == 'word') {
+                    $document->whereIn('file_ext', $WORD);
+                }elseif ($request->file_ext == 'excel') {
+                    $document->whereIn('file_ext', $EXCEL);
+                }elseif ($request->file_ext == 'ppt') {
+                    $document->whereIn('file_ext', $PPT);
+                }elseif ($request->file_ext == 'pub') {
+                    $document->where('file_ext', 'pub');
+                }elseif ($request->file_ext == 'img') {
+                    $document->whereIn('file_ext', $IMG);
+                }
             }
 
             if(isset($request->df) || isset($request->dt)){
                 $document->where('updated_at','>=',$df)
                          ->where('updated_at','<=',$dt);
-            }
-
-            if(isset($request->alpha)){
-                $document->where('file_name', 'LIKE', $request->alpha.'%');
             }
 
             return $this->populate($document, $entries);
