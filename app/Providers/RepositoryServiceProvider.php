@@ -17,7 +17,6 @@ class RepositoryServiceProvider extends ServiceProvider {
 
 		$this->app->bind('App\Core\Interfaces\UserSubmenuInterface', 'App\Core\Repositories\UserSubmenuRepository');
 
-
 		$this->app->bind('App\Core\Interfaces\MenuInterface', 'App\Core\Repositories\MenuRepository');
 
 		$this->app->bind('App\Core\Interfaces\SubmenuInterface', 'App\Core\Repositories\SubmenuRepository');
@@ -28,6 +27,8 @@ class RepositoryServiceProvider extends ServiceProvider {
 
 		$this->app->bind('App\Core\Interfaces\DocumentDownloadInterface', 'App\Core\Repositories\DocumentDownloadRepository');
 		
+		$this->app->bind('App\Core\Interfaces\FolderInterface', 'App\Core\Repositories\FolderRepository');
+
 	}
 
 

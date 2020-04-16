@@ -16,7 +16,6 @@ class DocumentService extends BaseService{
     protected $document_download_repo;
 
 
-
     public function __construct(DocumentInterface $document_repo, DocumentDownloadInterface $document_download_repo){
 
         $this->document_repo = $document_repo;
@@ -32,7 +31,6 @@ class DocumentService extends BaseService{
     public function fetch($request){
 
         $documents = $this->document_repo->fetch($request);
-
         $request->flash();
         return view('guest.document.index')->with('documents', $documents);
 
@@ -45,7 +43,6 @@ class DocumentService extends BaseService{
     public function fetchArchives($request){
 
         $documents = $this->document_repo->fetchDeleted($request);
-
         $request->flash();
         return view('guest.document.archives')->with('documents', $documents);
 
@@ -67,8 +64,8 @@ class DocumentService extends BaseService{
                 $file_ext = File::extension($data->getClientOriginalName());
                 $file_name = trim($data->getClientOriginalName(), '.'. $file_ext);
                 $file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
-                $data->storeAs('', $file_name);
-                $file_location = $file_name;  
+                $data->storeAs($request->folder_code, $file_name);
+                $file_location = $request->folder_code .'/'. $file_name;  
 
                 if($this->document_repo->isFileNameExist($data->getClientOriginalName())){
                     $duplicates_count++;

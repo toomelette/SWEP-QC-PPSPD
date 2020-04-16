@@ -29,7 +29,6 @@ class DocumentDownload extends Model{
 
 
 
-
     /** RELATIONSHIPS **/
     public function document() {
     	return $this->belongsTo('App\Models\Document','document_id','document_id');

@@ -22,6 +22,10 @@ class ViewComposerServiceProvider extends ServiceProvider{
         // SUBMENU
         View::composer(['dashboard.user.create', 
                         'dashboard.user.edit'], 'App\Core\ViewComposers\SubmenuComposer');
+        
+
+        // FOLDERS
+        View::composer(['guest.document.create',], 'App\Core\ViewComposers\FolderComposer');
 
     }
 

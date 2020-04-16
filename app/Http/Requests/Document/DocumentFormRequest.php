@@ -19,6 +19,7 @@ class DocumentFormRequest extends FormRequest{
 
         return [
             
+            'folder_code' => 'required|string|max:90',
             'doc_file' => 'nullable',
             
         ];

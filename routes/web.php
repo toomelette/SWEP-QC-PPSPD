@@ -33,6 +33,8 @@ Route::group(['as' => 'guest.'], function () {
 	Route::get('/reports', 'DocumentController@reports')->name('document.reports');
 	Route::get('/reports_print', 'DocumentController@reportsPrint')->name('document.reports_print');
 
+	Route::resource('folder', 'FolderController');
+
 });
 
 

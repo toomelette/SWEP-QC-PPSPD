@@ -19,15 +19,15 @@ class Document extends Model{
 
 
 
-
     protected $attributes = [
 
         'slug' => '',
         'document_id' => '',
+        'folder_code' => '',
         'file_name' => '',
-        'folder_name' => '',
         'file_location' => '',
         'file_size' => '',
+        'file_date' => '',
         'is_deleted' => 0,
         'is_duplicate' => 0,
         'created_at' => null,
@@ -46,7 +46,9 @@ class Document extends Model{
         return $this->hasMany('App\Models\DocumentDownload','document_id','document_id');
     }
 
-
+    public function folder() {
+        return $this->belongsTo('App\Models\Folder','folder_code','folder_code');
+    }
 
 
     

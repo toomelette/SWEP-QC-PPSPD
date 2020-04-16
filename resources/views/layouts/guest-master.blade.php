@@ -36,6 +36,9 @@
                 <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.index') ? 'active' : '' }}">
                   <a href="{{ route('guest.document.index') }}">Documents</a>
                 </li>
+                <li class="notifications-menu {{ Route::currentRouteNamed('guest.folder.index') ? 'active' : '' }}">
+                  <a href="{{ route('guest.folder.index') }}">Folders</a>
+                </li>
                 <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.archives') ? 'active' : '' }}">
                   <a href="{{ route('guest.document.archives') }}">Archives</a>
                 </li>
