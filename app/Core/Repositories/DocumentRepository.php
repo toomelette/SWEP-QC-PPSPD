@@ -41,14 +41,18 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
             $WORD = ['doc', 'docm', 'docx', 'dot', 'dotm', 'dotx'];
             $EXCEL = ['xls', 'xlsx', 'xlsm', 'xlt', 'xltx', 'xltm', 'xla', 'xlam', 'csv'];
             $PPT = ['ppt', 'pptm', 'pptx', 'pps', 'ppsm', 'ppsx', 'pot', 'potm', 'potx'];
-            $IMG = ['jpeg', 'jpg', 'png', 'ai', 'psd', '', ''];
+            $IMG = ['jpeg', 'jpg', 'png', 'ai', 'psd'];
 
             if(isset($request->q)){
                 $this->search($document, $request->q);
             }
 
             if(isset($request->alpha)){
-                $document->where('file_name', 'LIKE', $request->alpha.'%');
+                $document->where('file_name', 'LIKE', $request->alpha .'%');
+            }
+
+            if(isset($request->fc)){
+                $document->where('folder_code', 'LIKE', '%'. $request->fc .'%');
             }
 
             if (isset($request->file_ext)) {
@@ -92,20 +96,9 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         $documents = $this->cache->remember('documents:fetchDeleted:' . $key, 240, function() use ($request, $entries){
 
             $document = $this->document->newQuery();
-            $df = $this->__dataType->date_parse($request->df, 'Y-m-d 00:00:00');
-            $dt = $this->__dataType->date_parse($request->dt, 'Y-m-d 24:00:00');
             
             if(isset($request->q)){
                 $this->search($document, $request->q);
-            }
-
-            if(isset($request->df) || isset($request->dt)){
-                $document->where('updated_at','>=',$df)
-                         ->where('updated_at','<=',$dt);
-            }
-
-            if(isset($request->alpha)){
-                $document->where('file_name', 'LIKE', $request->alpha.'%');
             }
 
             return $this->populateDeleted($document, $entries);
@@ -128,7 +121,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
         if(isset($request->df) || isset($request->dt)){
             $documents->where('created_at','>=',$df)
-                     ->where('created_at','<=',$dt);
+                      ->where('created_at','<=',$dt);
         }
         
         return $documents->select('created_at')->where('is_deleted', 0)->where('is_duplicate', 0)->get();;
@@ -146,6 +139,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
         $document = new document;
         $document->slug = $this->str->random(32);
         $document->document_id = $this->getDocumentIdInc();
+        $document->folder_code = $request->folder_code;
         $document->file_name = $data->getClientOriginalName();
         $document->file_ext = $file_ext;
         $document->file_size = $data->getSize();

@@ -56,10 +56,11 @@ class DocumentDownloadRepository extends BaseRepository implements DocumentDownl
 
 
 
-    public function store($document_id){
+    public function store($document){
 
         $document_download = new DocumentDownload;
-        $document_download->document_id = $document_id;
+        $document_download->document_id = $document->document_id;
+        $document_download->file_name = $document->file_name;
         $document_download->downloaded_at = $this->carbon->now();
         $document_download->ip_downloaded = request()->ip();
         $document_download->machine_downloaded = gethostbyaddr($_SERVER['REMOTE_ADDR']);
@@ -92,7 +93,7 @@ class DocumentDownloadRepository extends BaseRepository implements DocumentDownl
 
     public function populate($model, $entries){
 
-        return $model->select('document_id', 'downloaded_at', 'ip_downloaded', 'machine_downloaded')
+        return $model->select('document_id', 'file_name', 'downloaded_at', 'ip_downloaded', 'machine_downloaded')
                      ->sortable()
                      ->orderBy('downloaded_at', 'desc')
                      ->paginate($entries);

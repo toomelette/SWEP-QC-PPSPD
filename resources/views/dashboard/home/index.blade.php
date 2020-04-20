@@ -45,7 +45,7 @@
           </tr>
           @foreach($document_downloads as $data) 
             <tr>
-              <td id="mid-vert">{{ optional($data->document)->file_name }}</td>
+              <td id="mid-vert">{{ $data->file_name }}</td>
               <td id="mid-vert">{{ __dataType::date_parse($data->downloaded_at, 'M d,Y H:i:s') }}</td>
               <td id="mid-vert">{{ $data->ip_downloaded }}</td>
               <td id="mid-vert">{{ $data->machine_downloaded }}</td>

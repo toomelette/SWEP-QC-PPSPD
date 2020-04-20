@@ -8,6 +8,6 @@ interface DocumentDownloadInterface {
 
 	public function fetch($request);
 
-	public function store($document_id);
+	public function store($document);
 		
 }

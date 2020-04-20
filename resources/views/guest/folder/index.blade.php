@@ -107,14 +107,9 @@
   <div class="modal fade" id="folder_update" data-backdrop="static">
     <div class="modal-dialog">
       <div class="modal-content">
-        <div class="modal-header">
-          <button class="close" data-dismiss="modal">
-            <span aria-hidden="true">&times;</span>
-          </button>
-          <h4 class="modal-title"> Edit Folder</h4>
-        </div>
-        <div class="modal-body" id="update_body">
-          <form method="POST" id="update_form">
+        <div class="modal-body" id="update_body"style="margin-bottom:150px; margin-top:100px:">
+         <p style="font-size: 17px;">Edit Folder</p>
+         <form method="POST" id="update_form">
             @csrf
             <input name="_method" value="PUT" type="hidden">
 
@@ -130,7 +125,7 @@
           <div class="modal-footer">
             <button class="btn btn-default" data-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-default">Update</button>
-        	</div>
+       	  </div>
           </form>
       </div>
     </div>

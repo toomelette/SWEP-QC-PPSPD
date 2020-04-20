@@ -23,6 +23,7 @@ class DocumentFilterRequest extends FormRequest{
 
             'q' => 'nullable|string|max:90',
             'alpha' => 'nullable|string|max:1',
+            'fc' => 'nullable|string|max:90',
             'file_ext' => 'nullable|string|max:10',
             'df' => 'nullable|date_format:"m/d/Y"',
             'dt' => 'nullable|date_format:"m/d/Y"',

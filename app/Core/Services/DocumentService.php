@@ -195,7 +195,7 @@ class DocumentService extends BaseService{
 
             if (!File::exists($path)) { return abort(404); }
 
-            $document_download = $this->document_download_repo->store($document->document_id);
+            $document_download = $this->document_download_repo->store($document);
 
             $type = File::mimeType($path);
             $header = [

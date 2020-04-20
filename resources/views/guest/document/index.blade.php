@@ -7,9 +7,10 @@
                         'sort' => Request::get('sort'),
                         'direction' => Request::get('direction'),
 
+		                'alpha' => Request::get('alpha'),
+		                'fc' => Request::get('fc'),
 		                'df' => Request::get('df'),
 		                'dt' => Request::get('dt'),
-		                'alpha' => Request::get('alpha'),
 		                'file_ext' => Request::get('file_ext'),
                       ];
 
@@ -83,6 +84,11 @@
 
 			    {!! __form::select_static_for_filter(
 			      '12', 'alpha', 'Alphabetical', old('pi'), $alphas, 'submit_document_filter', '', ''
+			    ) !!}
+
+
+			    {!! __form::select_dynamic_for_filter(
+			      '12', 'fc', 'Folder', old('fc'), $global_folders_all, 'folder_code', 'folder_code', 'submit_document_filter', 'select2', 'style="width:100%;"'
 			    ) !!}
 
 	            <div class="checkbox col-md-12">

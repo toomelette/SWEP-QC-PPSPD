@@ -21,6 +21,7 @@ class DocumentDownload extends Model{
     protected $attributes = [
 
         'document_id' => '',
+        'file_name' => '',
         'downloaded_at' => null,
         'ip_downloaded' => '',
         'machine_downloaded' => '',

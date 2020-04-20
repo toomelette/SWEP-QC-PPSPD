@@ -25,7 +25,8 @@ class ViewComposerServiceProvider extends ServiceProvider{
         
 
         // FOLDERS
-        View::composer(['guest.document.create',], 'App\Core\ViewComposers\FolderComposer');
+        View::composer(['guest.document.create',
+                        'guest.document.index', ], 'App\Core\ViewComposers\FolderComposer');
 
     }
 
