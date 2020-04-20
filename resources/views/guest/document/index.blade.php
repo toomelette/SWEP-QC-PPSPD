@@ -133,9 +133,10 @@
 				<table class="table table-hover">
 				  <tr>
 				    <th>@sortablelink('file_name', 'Filename')</th>
+				    <th>@sortablelink('folder_code', 'Folder')</th>
 				    <th>@sortablelink('file_size', 'Size')</th>
 				    <th>@sortablelink('updated_at', 'Date Updated')</th>
-	            	<th style="width: 150px">Action</th>
+	            	<th>Action</th>
 				  </tr>
 				  @foreach($documents as $data) 
 				    <tr {!! __html::table_highlighter($data->slug, $table_sessions) !!}>
@@ -143,6 +144,7 @@
 	                   	$design = design($data->file_ext);
 	                  ?>
 				      <td id="mid-vert"><i class="fa {{ $design }}"></i>&nbsp; {{ $data->file_name }}</td>
+				      <td id="mid-vert">{{ $data->folder_code }}</td>
 				      <td id="mid-vert">{{ number_format($data->file_size / 1000)}} KB</td>
 				      <td id="mid-vert">{{ __dataType::date_parse($data->updated_at, 'M d, Y - g:i A') }}</td>
 		              <td id="mid-vert">

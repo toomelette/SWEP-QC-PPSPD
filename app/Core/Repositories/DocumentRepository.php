@@ -326,7 +326,8 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
     public function search($model, $key){
 
         return $model->where(function ($model) use ($key) {
-                $model->where('file_name', 'LIKE', '%'. $key .'%');
+                $model->where('file_name', 'LIKE', '%'. $key .'%')
+                      ->orWhere('folder_code', 'LIKE', '%'. $key .'%');
         });
 
     }
@@ -337,7 +338,7 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
     public function populate($model, $entries){
 
-        return $model->select('slug', 'file_name', 'file_size', 'file_location', 'file_ext', 'updated_at')
+        return $model->select('slug', 'file_name', 'folder_code', 'file_size', 'file_location', 'file_ext', 'updated_at')
                      ->where('is_deleted', 0)
                      ->where('is_duplicate', 0)
                      ->sortable()

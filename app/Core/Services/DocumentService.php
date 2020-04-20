@@ -64,7 +64,9 @@ class DocumentService extends BaseService{
                 $file_ext = File::extension($data->getClientOriginalName());
                 $file_name = trim($data->getClientOriginalName(), '.'. $file_ext);
                 $file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
+
                 $data->storeAs($request->folder_code, $file_name);
+
                 $file_location = $request->folder_code .'/'. $file_name;  
 
                 if($this->document_repo->isFileNameExist($data->getClientOriginalName())){
