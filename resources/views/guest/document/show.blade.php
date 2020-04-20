@@ -32,6 +32,11 @@
 					</tr>
 						
 					<tr>
+						<td>Folder Code</td>
+						<td>{{ $document->folder_code }}</td>
+					</tr>
+						
+					<tr>
 						<td>Filesize</td>
 						<td>{{ number_format($document->file_size / 1000) }} KB</td>
 					</tr>
