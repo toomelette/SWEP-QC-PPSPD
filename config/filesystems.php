@@ -45,7 +45,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root' => 'F:\swep_qc_ppspd',
+            'root' => '/swep_qc_ppspd',
         ],
         
         'public' => [
