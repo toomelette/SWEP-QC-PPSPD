@@ -18,7 +18,7 @@ class FolderCreateFormRequest extends FormRequest{
 
         return [
             	
-            'folder_code' => 'required|string|max:90',
+            'folder_code' => 'required|string|max:90|unique:folders,folder_code,'.$this->route('folder').',slug',
             'description' => 'nullable|string|max:255',
 
         ];

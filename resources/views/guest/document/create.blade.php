@@ -27,7 +27,7 @@
 	          @csrf
 
 	            {!! __form::select_dynamic(
-	              '4', 'folder_code', 'Folder *', old('folder_code'), $global_folders_all, 'folder_code', 'folder_code', $errors->has('folder_code'), $errors->first('folder_code'), 'select2', ''
+	              '4', 'folder_code', 'Folder', old('folder_code'), $global_folders_all, 'folder_code', 'folder_code', $errors->has('folder_code'), $errors->first('folder_code'), 'select2', ''
 	            ) !!}
 
 	          	<div class="col-md-12" style="margin-bottom:20px;">

@@ -12,6 +12,8 @@ interface DocumentInterface {
 
 	public function store($request, $data, $file_ext, $file_location, $is_deleted, $is_duplicate);
 
+	public function updateFolder($folder_code, $slug);
+
 	public function update($request, $file_name, $file_size, $file_location, $document);
 
 	public function findBySlug($slug);

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Core\Services\DocumentService;
 use App\Http\Requests\Document\DocumentFormRequest;
 use App\Http\Requests\Document\DocumentFilterRequest;
+use App\Http\Requests\Document\DocumentUpdateFolderFormRequest;
 
 class DocumentController extends Controller{
 
@@ -44,9 +45,9 @@ class DocumentController extends Controller{
     }
  
 
-    // public function update(DocumentFormRequest $request, $slug){
-    //     return $this->document->update($request, $slug);
-    // }
+    public function updateFolder(DocumentUpdateFolderFormRequest $request, $slug){
+        return $this->document->updateFolder($request, $slug);
+    }
  
 
     public function viewFile($slug){

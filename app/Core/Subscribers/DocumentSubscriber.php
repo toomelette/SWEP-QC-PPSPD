@@ -31,6 +31,7 @@ class DocumentSubscriber extends BaseSubscriber{
         $events->listen('document.restore', 'App\Core\Subscribers\DocumentSubscriber@onRestore');
         $events->listen('document.overwrite', 'App\Core\Subscribers\DocumentSubscriber@onOverwrite');
         $events->listen('document.download', 'App\Core\Subscribers\DocumentSubscriber@onDownload');
+        $events->listen('document.update_folder', 'App\Core\Subscribers\DocumentSubscriber@onUpdateFolder');
 
     }
 
@@ -123,6 +124,21 @@ class DocumentSubscriber extends BaseSubscriber{
     public function onDownload(){
   
         $this->__cache->deletePattern(''. config('app.name') .'_cache:document_downloads:fetch:*');
+        
+    }
+
+
+
+
+
+    public function onUpdateFolder($document){
+
+        $this->__cache->deletePattern(''. config('app.name') .'_cache:documents:fetch:*');
+        $this->__cache->deletePattern(''. config('app.name') .'_cache:documents:fetchDeleted:*');
+        $this->__cache->deletePattern(''. config('app.name') .'_cache:documents:findBySlug:'. $document->slug .'');
+
+        $this->session->flash('DOCUMENT_UPDATE_FOLDER_SUCCESS', 'The Document has been successfully updated!');
+        $this->session->flash('DOCUMENT_UPDATE_FOLDER_SUCCESS_SLUG', $document->slug);
         
     }
 

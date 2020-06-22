@@ -1,6 +1,7 @@
 <?php
 
-  $table_sessions = [ Session::get('DOCUMENT_UPDATE_SUCCESS_SLUG'), ];
+  $table_sessions = [ Session::get('DOCUMENT_UPDATE_SUCCESS_SLUG'),
+  					  Session::get('DOCUMENT_UPDATE_FOLDER_SUCCESS_SLUG'), ];
 
   $appended_requests = [
                         'q'=> Request::get('q'),
@@ -86,7 +87,6 @@
 			      '12', 'alpha', 'Alphabetical', old('pi'), $alphas, 'submit_document_filter', '', ''
 			    ) !!}
 
-
 			    {!! __form::select_dynamic_for_filter(
 			      '12', 'fc', 'Folder', old('fc'), $global_folders_all, 'folder_code', 'folder_code', 'submit_document_filter', 'select2', 'style="width:100%;"'
 			    ) !!}
@@ -106,7 +106,7 @@
 
 	    <div class="box box-solid">
 	      <div class="box-header with-border">
-	        <h2 class="box-title">Date Filters</h2>
+	        <h2 class="box-title">Date Filter</h2>
 	      </div>
 			<div class="box-body">
 		        {!! __form::datepicker('12', 'df',  'From', old('df'), '', '') !!}
@@ -149,10 +149,25 @@
 				      <td id="mid-vert">{{ __dataType::date_parse($data->updated_at, 'M d, Y - g:i A') }}</td>
 		              <td id="mid-vert">
 		                <div class="btn-group">
-		                  <a type="button" class="btn btn-default" id="show_button" href="{{ route('guest.document.show', $data->slug) }}">
+		                  <a type="button" 
+		                  	 class="btn btn-default" 
+		                  	 id="update_folder_button" 
+		                  	 data-action="update_folder" 
+		                  	 data-url="{{ route('guest.document.update_folder', $data->slug) }}"
+		                  	 data-folder_code="{{ $data->folder_code }}">
+		                    Change Folder
+		                  </a>
+		                  <a type="button" 
+		                  	 class="btn btn-default" 
+		                  	 id="show_button" 
+		                  	 href="{{ route('guest.document.show', $data->slug) }}">
 		                    <i class="fa fa-download"></i>
 		                  </a>
-		                  <a type="button" class="btn btn-default" id="delete_button" data-action="delete" data-url="{{ route('guest.document.destroy', $data->slug) }}">
+		                  <a type="button" 
+		                  	 class="btn btn-default" 
+		                  	 id="delete_button" 
+		                  	 data-action="delete" 
+		                  	 data-url="{{ route('guest.document.destroy', $data->slug) }}">
 		                    <i class="fa fa-trash"></i>
 		                  </a>
 		                </div>
@@ -183,6 +198,33 @@
 
   {!! __html::modal_delete('document_delete') !!}
 
+  <div class="modal fade" id="update_folder" data-backdrop="static">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body" id="update_folder_body"style="margin-top:100px:">
+         <p style="font-size: 17px;">Change Folder</p>
+         <form method="POST" id="update_folder_form">
+            @csrf
+            <input name="_method" value="PUT" type="hidden">
+
+            <div class="row">
+
+	            {!! __form::select_dynamic(
+	              '12', 'folder_code', 'Folder', old('folder_code'), $global_folders_all, 'folder_code', 'folder_code', $errors->has('folder_code'), $errors->first('folder_code'), 'select2', 'style="width:100%;"'
+	            ) !!}
+            	
+            </div>
+
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-default">Save</button>
+       	  </div>
+          </form>
+      </div>
+    </div>
+  </div>
+
 @endsection 
 
 
@@ -192,6 +234,13 @@
 @section('scripts')
 
   <script type="text/javascript">
+
+  	$(document).on("click", "#update_folder_button", function () {
+		$('.select2').select2();
+		$("#update_folder").modal("show");
+		$("#update_folder_body #update_folder_form").attr("action", $(this).data("url"));
+		$("#update_folder_form #folder_code").val($(this).data("folder_code")).change();
+	});
 
     {{-- CALL CONFIRM DELETE MODAL --}}
     {!! __js::button_modal_confirm_delete_caller('document_delete') !!}
@@ -213,6 +262,11 @@
     {{-- UPDATE TOAST --}}
     @if(Session::has('DOCUMENT_UPDATE_SUCCESS'))
       {!! __js::toast(Session::get('DOCUMENT_UPDATE_SUCCESS'), 'bottom-right') !!}
+    @endif
+
+    {{-- UPDATE FOLDER --}}
+    @if(Session::has('DOCUMENT_UPDATE_FOLDER_SUCCESS'))
+      {!! __js::toast(Session::get('DOCUMENT_UPDATE_FOLDER_SUCCESS'), 'bottom-right') !!}
     @endif
 
   </script>

@@ -4,27 +4,29 @@ namespace App\Http\Requests\Document;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class DocumentFormRequest extends FormRequest{
+class DocumentUpdateFolderFormRequest extends FormRequest{
 
-    
+
+
 
     public function authorize(){
 
         return true;
-    
     }
 
-    
+   
+
+
     public function rules(){
 
         return [
-            
-            'folder_code' => 'nullable|string|max:90',
-            'doc_file' => 'nullable',
-            
+
+            'folder_code' => 'required|string|max:90',
+
         ];
-    
+
     }
+
 
 
 

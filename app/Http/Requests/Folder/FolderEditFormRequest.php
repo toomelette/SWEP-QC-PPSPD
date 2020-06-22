@@ -18,7 +18,7 @@ class FolderEditFormRequest extends FormRequest{
 
         return [
             	
-            'e_folder_code' => 'required|string|max:90',
+            'e_folder_code' => 'required|string|max:90|unique:folders,folder_code,'.$this->route('folder').',slug',
             'e_description' => 'nullable|string|max:255',
 
         ];

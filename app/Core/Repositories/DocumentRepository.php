@@ -181,6 +181,20 @@ class DocumentRepository extends BaseRepository implements DocumentInterface {
 
 
 
+    public function updateFolder($folder_code, $slug){
+
+        $document = $this->findBySlug($slug);
+        $document->folder_code = $folder_code;
+        $document->save();
+
+        return $document;
+
+    }
+
+
+
+
+
     public function destroy($slug){
 
         $document = $this->findBySlug($slug);

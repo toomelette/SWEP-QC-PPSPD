@@ -33,11 +33,11 @@
                 <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.create') ? 'active' : '' }}">
                   <a href="{{ route('guest.document.create') }}">Import</a>
                 </li>
-                <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.index') ? 'active' : '' }}">
-                  <a href="{{ route('guest.document.index') }}">Documents</a>
-                </li>
                 <li class="notifications-menu {{ Route::currentRouteNamed('guest.folder.index') ? 'active' : '' }}">
                   <a href="{{ route('guest.folder.index') }}">Folders</a>
+                </li>
+                <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.index') ? 'active' : '' }}">
+                  <a href="{{ route('guest.document.index') }}">Documents</a>
                 </li>
                 <li class="notifications-menu {{ Route::currentRouteNamed('guest.document.archives') ? 'active' : '' }}">
                   <a href="{{ route('guest.document.archives') }}">Archives</a>
@@ -52,11 +52,38 @@
           </div>
         </nav>
       </header>
+
       <div class="content-wrapper">
         <div class="container-fluid">
           @yield('content')
         </div>
       </div>
+
+      {{-- FORM ERROR MODAL --}}  
+      <div class="modal fade modal-danger" data-backdrop="static" id="error_fields">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button class="close" data-dismiss="modal">
+                <span aria-hidden="true">&times;</span>
+              </button>
+              <h4 class="modal-title">
+                <i class="fa fa-exclamation-triangle"></i> 
+                &nbsp;Whoops!
+              </h4>
+            </div>
+            <div class="modal-body">
+              <p style="font-size: 17px;">
+                Please check for errors in your input fields.
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button class="btn btn-outline" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
       <footer class="main-footer">
         <div class="container-fluid">
           <div class="pull-right hidden-xs">
@@ -74,6 +101,12 @@
     @yield('modals')
       
     @yield('scripts')
+
+    @if($errors->any())
+      <script type="text/javascript">
+        $("#error_fields").modal("show");
+      </script>
+    @endif
 
   </body>
 </html>

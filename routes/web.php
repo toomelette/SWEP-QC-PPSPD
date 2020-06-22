@@ -32,6 +32,7 @@ Route::group(['as' => 'guest.'], function () {
 	Route::post('/overwrite/keep_both/{slug}', 'DocumentController@overwriteKeepBoth')->name('document.overwriteKeepBoth');
 	Route::get('/reports', 'DocumentController@reports')->name('document.reports');
 	Route::get('/reports_print', 'DocumentController@reportsPrint')->name('document.reports_print');
+	Route::put('/update_folder/{slug}', 'DocumentController@updateFolder')->name('document.update_folder');
 
 	Route::resource('folder', 'FolderController');
 

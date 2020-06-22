@@ -114,7 +114,7 @@
             <input name="_method" value="PUT" type="hidden">
 
 	        {!! __form::textbox(
-	        	'12', 'e_folder_code', 'text', 'Folder Code *', 'Folder Code', old('e_folder_code'), $errors->has('e_folder_code'), $errors->first('folder_code'), 'required'
+	        	'12', 'e_folder_code', 'text', 'Folder Code *', 'Folder Code', old('e_folder_code'), $errors->has('e_folder_code'), $errors->first('e_folder_code'), 'required'
 	        ) !!}   
 
 	        {!! __form::textbox(

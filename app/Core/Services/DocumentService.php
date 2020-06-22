@@ -109,48 +109,62 @@ class DocumentService extends BaseService{
 
 
 
-    public function update($request, $slug){
+    public function updateFolder($request, $slug){
 
-        $document = $this->document_repo->findbySlug($slug);
-        $file_name = $document->file_name;
-        $file_location = $document->file_location;
-        $file_size = $document->file_size;
-        $file_ext = $document->file_ext;
+        $document = $this->document_repo->updateFolder($request->folder_code, $slug);;
 
-        // if doc_file has value
-        if(!is_null($request->file('doc_file'))){
-
-            $file_ext = File::extension($request->file('doc_file')->getClientOriginalName());
-            $file_name = trim($request->file('doc_file')->getClientOriginalName(), '.'. $file_ext);
-            $new_file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
-            $old_file_location = $document->file_location;
-            $new_file_location = $request->folder .'/'. $new_file_name;
-            $file_location = $old_file_location;
-            $file_size = $request->file('doc_file')->getSize();
-
-            if ($this->storage->disk('local')->exists($old_file_location)) {
-                $this->storage->disk('local')->delete($old_file_location);
-            }
-            
-            $request->file('doc_file')->storeAs($request->folder, $new_file_name);
-            $file_location = $new_file_location;
-            $file_name = $request->file('doc_file')->getClientOriginalName();
-
-        }elseif($request->folder != $document->folder_name && $this->storage->disk('local')->exists($file_location)){
-
-            $new_file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
-            $new_file_location = $request->folder .'/'. $new_file_name;
-            $this->storage->disk('local')->move($file_location, $new_file_location);
-            $file_location = $new_file_location;
-
-        }
-
-        $document = $this->document_repo->update($request, $file_name, $file_size, $file_location, $document);
-
-        $this->event->fire('document.update', $document);
+        $this->event->fire('document.update_folder', $document);
         return redirect()->route('guest.document.index');
 
     }
+
+
+
+
+
+
+    // public function update($request, $slug){
+
+    //     $document = $this->document_repo->findbySlug($slug);
+    //     $file_name = $document->file_name;
+    //     $file_location = $document->file_location;
+    //     $file_size = $document->file_size;
+    //     $file_ext = $document->file_ext;
+
+    //     // if doc_file has value
+    //     if(!is_null($request->file('doc_file'))){
+
+    //         $file_ext = File::extension($request->file('doc_file')->getClientOriginalName());
+    //         $file_name = trim($request->file('doc_file')->getClientOriginalName(), '.'. $file_ext);
+    //         $new_file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
+    //         $old_file_location = $document->file_location;
+    //         $new_file_location = $request->folder .'/'. $new_file_name;
+    //         $file_location = $old_file_location;
+    //         $file_size = $request->file('doc_file')->getSize();
+
+    //         if ($this->storage->disk('local')->exists($old_file_location)) {
+    //             $this->storage->disk('local')->delete($old_file_location);
+    //         }
+            
+    //         $request->file('doc_file')->storeAs($request->folder, $new_file_name);
+    //         $file_location = $new_file_location;
+    //         $file_name = $request->file('doc_file')->getClientOriginalName();
+
+    //     }elseif($request->folder != $document->folder_name && $this->storage->disk('local')->exists($file_location)){
+
+    //         $new_file_name = $this->__dataType::fileFilterReservedChar($file_name .'-'. $this->str->random(8), '.'. $file_ext);
+    //         $new_file_location = $request->folder .'/'. $new_file_name;
+    //         $this->storage->disk('local')->move($file_location, $new_file_location);
+    //         $file_location = $new_file_location;
+
+    //     }
+
+    //     $document = $this->document_repo->update($request, $file_name, $file_size, $file_location, $document);
+
+    //     $this->event->fire('document.update', $document);
+    //     return redirect()->route('guest.document.index');
+
+    // }
 
 
 
